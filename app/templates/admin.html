@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+    <title>管理员页面</title>
+{% endblock %}
+
+{% block login %}
+{#      判断是否已经登录#}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >{{ request.session.info.name }}<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+              <li><a href="#">个人信息</a></li>
+              <li><a href="/logout/">退出</a></li>
+          </ul>
+        </li>
+{% endblock %}
+
+{% block nav %}
+      <ul class="nav navbar-nav">
+         <li><a href="#" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >审核<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/admin/">审核商家</a></li>
+            <li><a href="/admin/">审核文章</a></li>
+            <li><a href="/admin/">审核商品</a></li>
+          </ul></li>
+          <li><a href="#" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >权限修改<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+              <li><a href="#">用户权限</a></li>
+              <li><a href="#">商家权限</a></li>
+          </ul></li>
+          <li><a href="/phone/list/">发布公告</a></li>
+          <li><a href="/phone/list/">搜素</a></li>
+          <li><a href="#">Link</a></li>
+      </ul>
+{% endblock %}
+
+{% block css %}
+{#    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />#}
+     <link rel="stylesheet" type="text/css" href="{% static "css/zhonglingxm2.css" %}"/>
+{% endblock %}
+
+{% block content %}
+
+
+{% endblock %}

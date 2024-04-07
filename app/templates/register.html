@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+     <style>
+        .account {
+            width: 400px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            box-shadow: 5px 5px 20px #aaa;
+
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+            padding: 20px 40px;
+        }
+
+        .account h2 {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="account">
+    <h2>注册</h2><br/>
+<h5 style="text-align: center">商家<span>|</span>用户皆可注册</h5>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {%  for i in form %}
+        <div class="form-group" >
+            <label>{{ i.label }}</label>
+            {{ i }}
+            <span style="color: red">{{ i.errors.0 }}</span>
+        </div>
+        {% endfor %}
+        <input type="submit" value="注册" class="btn btn-primary">
+        <br/>暂不注册，前往<a href="/index/">首页</a>&nbsp;&nbsp;
+        <span>||</span>&nbsp;&nbsp;已有账号，直接<a href="/login/">登录</a>
+    </form>
+</div>
+
+</body>
+</html>

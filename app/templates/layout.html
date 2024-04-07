@@ -1,0 +1,79 @@
+{#模板页面#}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+{#标题#}
+    {% block title %}
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+{#引入css#}
+    {% block css %}{% endblock %}
+
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.js' %}"></script>
+{#引入js#}
+    {% block js %}{% endblock %}
+
+</head>
+
+<body>
+{#导航条#}
+
+<nav class="navbar navbar-default">
+    <!--header-->
+{% block header %}
+    <div style="font-size: 15px;">
+    	<div class="container"  >
+        	<p class="col-xs-8" >
+                Hi!您好，欢迎来到红河州特产推荐网站!
+            </p>
+
+        	<p class="col-xs-1">
+            	<a href="/index/" style="color: #0f0f0f" >返回首页 </a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="# " style="font-size: 30px;">红河州特产</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="font-size: 18px;">
+
+    {% block nav %}
+
+    {% endblock %}
+
+      <ul class="nav navbar-nav navbar-right">
+
+{% block login %}
+{#    显示已登录用户信息#}
+{% endblock %}
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{#导航条结束#}
+
+{#中间#}
+<div style="margin-left: auto;margin-right: auto;">
+    {#填写不同内容#}
+    {% block content %}{% endblock %}
+</div>
+{#中间结束#}
+
+</body>
+</html>

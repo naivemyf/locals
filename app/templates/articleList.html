@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+
+{% block nav %}
+      <ul class="nav navbar-nav">
+        <li ><a href="/index/">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="/article/list/">文章列表</a></li>
+        <li><a href="/article/add/">发布文章</a></li>
+          <li><a href="/phone/list/">搜素</a></li>
+          <li><a href="#">Link</a></li>
+      </ul>
+{% endblock %}
+
+
+{% block content %}
+ <div class="container">
+        <div class="clearfix">
+            <a class="btn btn-primary" href="/article/add/" style="margin-bottom: 10px" id="add_btn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
+                添加文章
+            </a>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
+                {{ title }}
+            </div>
+            <table class="table table-bordered" id="tab" >
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>标题</th>
+                    <th>发布时间</th>
+                    <th>更新时间</th>
+                    <th>作者</th>
+
+                    <th>审核状态</th>
+                </tr>
+                </thead>
+                <tbody >
+                {% for i in obj %}
+                    <tr>
+                        <th>{{ i.id }}</th>
+                        <td>{{ i.title}}</td>
+                        <td>{{ i.timestamp }}</td>
+                        <td>
+                            {% if  i.updatetime  %}
+                                {{ i.updatetime }}
+                            {% else %}
+                                无
+                            {% endif %}
+                        </td>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.get_status_display }}</td>
+{#                        {% autoescape off %}#}
+{#                        <td>{{ obj.content }}</td>#}
+{#                        {% endautoescape %}#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+    window.onload = function() {
+        var title = document.title;
+        var add_btn = document.getElementById('add_btn');
+        var table =document.getElementById('tab');
+        var trs = table.rows;
+        var i,len,cell;
+        if (title =="文章列表") {
+            add_btn.style.display = 'none';
+             for( i = 0, len = trs.length; i < len; i++) {
+                 cell = trs[i].cells[5];
+                 cell.style.display = 'none';
+             }
+        }
+    }
+    </script>
+{% endblock %}
