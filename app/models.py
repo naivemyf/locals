@@ -69,7 +69,7 @@ class Article(models.Model):
     update_time = models.DateTimeField(verbose_name="更新时间", auto_now=True)
     username = models.ForeignKey(to="User",to_field="id",verbose_name="作者",on_delete=models.CASCADE)
     content = models.TextField(verbose_name="内容")
-    commdity = models.ForeignKey(to="Commdity",to_field="id",verbose_name="商品",on_delete=models.CASCADE)
+    commdity = models.ForeignKey(to="Commdity",to_field="id",verbose_name="商品",on_delete=models.CASCADE, null=True,blank=True)
     status_choice =(
         (0, "待审核"),
         (1, "审核通过")

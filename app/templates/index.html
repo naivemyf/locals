@@ -17,11 +17,60 @@
       <ul class="nav navbar-nav">
         <li ><a href="/index/">首页 <span class="sr-only">(current)</span></a></li>
         <li><a href="/article/list/">文章列表</a></li>
+          <li><a href="/commdity/listall/">商品列表</a></li>
           <li><a href="/article/add/">发布文章</a></li>
           <li><a href="/phone/list/">搜素</a></li>
           <li><a href="#">Link</a></li>
       </ul>
 {% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript" src="{% static "js/jquery-3.6.0.js" %}"></script>
+    <script type="text/javascript" src="{% static 'js/zhonglin.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/zhongling2.js' %}"></script>
+    <script>
+    $(document).ready(function (){
+{#判断角色#}
+function getRole(rid) {
+    var a;
+    if (rid == 1) {
+        a = "<li><a href='/article/listme/'>我发布的</a></li>";
+        a=a+"<li><a href='/article/listme/'>我收藏的</a></li>";
+    } else if (rid == 2) {
+        a = "<li><a href='/merchant/'>商家页面</a></li>";
+    } else if (rid == 3) {
+        a = "<li><a href='/admin/'>管理页面</a></li>";
+    }
+    return a;
+}
+{#角色存在#}
+var name = "{{request.session.info.name}}";
+if (name){
+    var rid ="{{ request.session.info.role_id }}";
+    var li="<li><a href='#'>个人信息</a></li>";
+    getRole(rid);
+    b="<li role='separator' class='divider'></li><li><a href='/logout/'>退出</a></li></ul></li>";
+    x=li+getRole(rid)+b;
+    $("#navnav").html(x);
+    $("#name").html(name);
+}else {
+    $(".dropdown").empty()
+    x="<li><a href='/login/' style='color:grey'>登录</a></li>";
+    $("#loginnav").html(x);
+}
+    })
+</script>
+
+    {% block jsartlist %}
+    {% endblock %}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/zhonglingxm2.css" %}" />
+{% endblock %}
+
 
 
 {% block content %}
@@ -251,45 +300,3 @@
     </div>
 {% endblock %}
 
-
-{% block js %}
-    <script type="text/javascript" src="{% static "js/jquery-3.6.0.js" %}"></script>
-    <script type="text/javascript" src="{% static 'js/zhonglin.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/zhongling2.js' %}"></script>
-    <script>
-    $(document).ready(function (){
-{#判断角色#}
-function getRole(rid) {
-    var a;
-    if (rid == 1) {
-        a = "<li><a href='/article/listme/'>我发布的</a></li>";
-    } else if (rid == 2) {
-        a = "<li><a href='/merchant/'>商家页面</a></li>";
-    } else if (rid == 3) {
-        a = "<li><a href='/admin/'>管理页面</a></li>";
-    }
-    return a;
-}
-{#角色存在#}
-var name = "{{request.session.info.name}}";
-if (name){
-    var rid ="{{ request.session.info.role_id }}";
-    var li="<li><a href='#'>个人信息</a></li>";
-    getRole(rid);
-    b="<li role='separator' class='divider'></li><li><a href='/logout/'>退出</a></li></ul></li>";
-    x=li+getRole(rid)+b;
-    $("#navnav").html(x);
-    $("#name").html(name);
-}else {
-    $(".dropdown").empty()
-    x="<li><a href='/login/' style='color:grey'>登录</a></li>";
-    $("#loginnav").html(x);
-}
-    })
-</script>
-{% endblock %}
-
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />
-    <link rel="stylesheet" type="text/css" href="{% static "css/zhonglingxm2.css" %}" />
-{% endblock %}

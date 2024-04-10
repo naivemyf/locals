@@ -116,15 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-#报错语言en-us英语，zh-hans汉语；
-#LANGUAGE_CODE = "en-us"
+#  报错语言en-us英语，zh-hans汉语；
+#  LANGUAGE_CODE = "en-us"
 LANGUAGE_CODE = "zh-hans"
-
-TIME_ZONE = "UTC"
+#  使用时区"UTC"会造成数据模块生成时间存在时间差
+TIME_ZONE = "Asia/Shanghai"
 
 USE_I18N = True
-
-USE_TZ = True
+#  USE_TZ = True
+USE_TZ = False   #  使用时区
 
 
 # Static files (CSS, JavaScript, Images)

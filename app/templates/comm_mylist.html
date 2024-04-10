@@ -1,0 +1,120 @@
+{% extends "merchant.html" %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+ <div class="container">
+        <div class="clearfix">
+            <a class="btn btn-primary" href="/commditye/add/" style="margin-bottom: 10px" id="add_btn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
+                发布商品
+            </a>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
+                {{ title }}
+            </div>
+            <table class="table table-bordered" id="tab" >
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商品名称</th>
+                    <th>价格</th>
+                    <th>发布时间</th>
+                    <th>成份</th>
+                    <th>地区</th>
+                    <th>商品图片</th>
+                    <th>商家</th>
+                    <th>审核状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody >
+                {% for i in list %}
+                    <tr>
+                        <th>{{ i.id }}</th>
+                        <td>{{ i.commdityname}}</td>
+                        <td>{{ i.price }}</td>
+                        <td>{{ i.area }}</td>
+                        <td>{{ i.createtime }}</td>
+                        <td>{{ i.form }}</td>
+                        <td>
+                            {% if  i.pic  %}
+                                <img style="width: 100px;height: 100px" src="{{ i.pic.url }}" alt="{{ i.pic }}">
+                            {% else %}
+                                无
+                            {% endif %}
+                        </td>
+                        <td>{{ i.username }}</td>
+                        <td>{{ i.get_status_display }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/commdity/{{ i.id}}/detail/">查看</a>
+                        <a class="btn btn-primary btn-xs" href="/commdity/{{ i.id }}/edit">编辑</a>
+{#                        <a class="btn btn-danger btn-xs "  href="#">删除</a>#}
+                        <input uid="{{ i.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="删除" data-toggle="modal" data-target="#DeleteModal">
+                    </td>
+{#                        {% autoescape off %}#}
+{#                        <td>{{ obj.content }}</td>#}
+{#                        {% endautoescape %}#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <h4>是否确定删除商品？</h4>
+      <p style="margin:10px 0">删除后，所有数据内容都将无法找回！</p>
+      <p style="text-align: right">
+        <button id="btnConDelete" type="button" class="btn btn-danger">确定</button>
+        <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
+      </p>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block jsartlist %}
+    <script type="text/javascript">
+    $(function(){
+        BindDelete();
+        BindConDelete();
+    })
+    //警告框订单删除（通过按钮获取数据id）
+    function BindDelete(){
+        $(".btn-delete").click(function(){
+            //获取删除按钮的uid
+            Delete_id = $(this).attr("uid");
+        })
+    }
+    //订单确定删除
+    function BindConDelete(){
+        $("#btnConDelete").click(function (){
+            $.ajax({
+                url:"/commdity/delete/",
+                type:"GET",
+                data:{
+                    uid:Delete_id
+                },
+                datatype:"JSON",
+                success:function(res){
+                    if(res.status){
+                        alert("删除成功");
+                        location.reload();//刷新页面
+                    }else {
+                        alert(res.error);
+                    }
+                }
+            })
+        })
+    }
+    </script>
+{% endblock %}
