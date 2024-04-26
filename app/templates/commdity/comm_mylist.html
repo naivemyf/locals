@@ -1,4 +1,4 @@
-{% extends "merchant.html" %}
+{% extends "merchant/merchant.html" %}
 
 {% block title %}
     <title>{{ title }}</title>
@@ -7,7 +7,7 @@
 {% block content %}
  <div class="container">
         <div class="clearfix">
-            <a class="btn btn-primary" href="/commditye/add/" style="margin-bottom: 10px" id="add_btn">
+            <a class="btn btn-primary" href="/commdity/add/" style="margin-bottom: 10px" id="add_btn">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>
                 发布商品
             </a>
@@ -22,12 +22,12 @@
                 <thead>
                 <tr>
                     <th>序号</th>
-                    <th>商品名称</th>
-                    <th>价格</th>
+                    <th>特产名称</th>
+{#                    <th>价格</th>#}
                     <th>发布时间</th>
                     <th>成份</th>
-                    <th>地区</th>
-                    <th>商品图片</th>
+                    <th>特产分类</th>
+                    <th>特产图片</th>
                     <th>商家</th>
                     <th>审核状态</th>
                     <th>操作</th>
@@ -37,11 +37,12 @@
                 {% for i in list %}
                     <tr>
                         <th>{{ i.id }}</th>
-                        <td>{{ i.commdityname}}</td>
-                        <td>{{ i.price }}</td>
-                        <td>{{ i.area }}</td>
+                        <td><a href="/commdity/{{ i.id}}/detail/" >{{ i.commdityname}}</a></td>
+{#                        <td>{{ i.price }}</td>#}
+
                         <td>{{ i.createtime }}</td>
                         <td>{{ i.form }}</td>
+                        <td>{{ i.tag }}</td>
                         <td>
                             {% if  i.pic  %}
                                 <img style="width: 100px;height: 100px" src="{{ i.pic.url }}" alt="{{ i.pic }}">
@@ -82,7 +83,7 @@
 </div>
 {% endblock %}
 
-{% block jsartlist %}
+{% block js %}
     <script type="text/javascript">
     $(function(){
         BindDelete();

@@ -10,28 +10,33 @@ from app.utils.form import RegisterForm, LoginForm
 #注册
 def register(req):
     #"""注册"""
+
     if req.method == "GET":
         form = RegisterForm()
-        return render(req, 'register.html', {'form': form})
+        return render(req, 'user/register.html', {'form': form})
     form = RegisterForm(data=req.POST)
     if form.is_valid():
-        role = form.cleaned_data.get("role").id
-        if role == 1:
+        rid = form.cleaned_data.get("role").id
+        if rid == 1:
             form.save()
             return redirect("/login/")
-        elif role == 2:
+        elif rid == 2:
             form.instance.process =0
             form.save()
             return HttpResponse('<p style="text-align:center;font-size: 60px">注册成功，请等待管理员审核<p>')
-        elif role == 3:
+        elif rid == 3:
             return HttpResponse('<p style="text-align:center;font-size: 60px">管理员无需注册<p>')
-    return render(req, 'register.html', {'form': form})
+    return render(req, 'user/register.html', {'form': form})
+
+
+
+
 # 登录
 def login(req):
     """登录"""
     if req.method == "GET":
         form = LoginForm()
-        return render(req, 'login.html', {'form': form})
+        return render(req, 'user/login.html', {'form': form})
 
     form = LoginForm(data=req.POST)
     if form.is_valid():
@@ -45,16 +50,16 @@ def login(req):
         # 验证码校验
         user_input_code = form.cleaned_data.pop("code")
         code = req.session.get("image_code", "")
-        # if code.upper() != user_input_code:
-        #     form.add_error("code", "验证码错误")
-        #     return render(req, "login.html", {"form": form})
+        if code.upper() != user_input_code:
+            form.add_error("code", "验证码错误")
+            return render(req, "user/login.html", {"form": form})
 
         # 数据库检验用户名和密码
         # models.Admin.objects.filter(username='form.cleaned_data['username']',password='form.cleaned_data['password']').first()
         admin_object = models.User.objects.filter(**form.cleaned_data).first()
         if not admin_object:
             form.add_error("password", "用户名或者密码错误！")  # 显示错误信息在password框下面
-            return render(req, 'login.html', {'form': form})
+            return render(req, 'user/login.html', {'form': form})
 
         # 网站生成随机字符串，写到用户浏览器的cookie和session中
         req.session["info"] = {
@@ -72,7 +77,7 @@ def login(req):
             return redirect("/merchant/")
         elif rid == 3:#管理员
             return redirect("/index/")
-    return render(req, 'login.html', {'form': form})
+    return render(req, 'user/login.html', {'form': form})
 
 # 生成验证码
 def image_code(req):
@@ -92,3 +97,69 @@ def logout(req):
     """注销"""
     req.session.clear()
     return redirect("/index/")
+
+
+# 收藏列表
+def favindex(req):
+    title = "我的文章收藏"
+    message = "您还没有收藏任何文章"
+
+    uname = req.session["info"]["name"]  # 获取用户名
+    # art_ids = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).values_list('art_id',flat=True)
+    # # 搜素用户名和文章id不为空的数据，并取出满足两个条件的文章id用列表（一维表）的形式储存
+    existsts = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).exists()
+    if not existsts:
+        return render(req,'user/list_favorite.html', {'title': title, 'message': message})
+    u_list =models.Enshrine.objects.filter(username=uname,status=1)  # 查找用户储存的收藏信息
+    article_list = []   # 列表
+    for i in u_list:
+        art_id = i.art_id  # 将数据信息的id取出
+        exists =models.Article.objects.filter(id=art_id).exists()  # 用id到文章表查找是否存在
+        if not exists:  # 文章不存在，跳出此次循环
+            continue
+        art = models.Article.objects.get(id=art_id)  # 文章存在，则将文章信息取出
+        if not art:  # 文章不存在，跳出此次循环
+            continue
+        time =i.enshrinetime  # 取出收藏时间
+        article_list.append({
+            'art': art,
+            'time': time,
+        })
+    if not article_list:
+        message = "抱歉，您收藏的文章被删除了！"
+        return render(req, 'user/list_favorite.html', {'title': title, 'message': message})
+    return render(req,'user/list_favorite.html', {'title': title, 'art': article_list})
+
+
+#  我的商品收藏
+def favindexcomm(req):
+    title = "我的商品收藏"
+    message = "您还没有收藏任何商品"
+    uname = req.session["info"]["name"]  # 获取用户名
+    # art_ids = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).values_list('art_id',flat=True)
+    # # 搜素用户名和文章id不为空的数据，并取出满足两个条件的文章id用列表（一维表）的形式储存
+    exists =models.Enshrine.objects.filter(username=uname, comm_id__isnull=False).exists()
+    if not exists:
+        return render(req, 'user/list_favorite.html', {'title': title, 'message': message})
+    u_list = models.Enshrine.objects.filter(username=uname,status=1)
+    comm_list = []
+    for i in u_list:
+        comm_id = i.comm_id
+        if not comm_id:
+            continue
+        existsid = models.Commdity.objects.filter(id=comm_id).exists()  # 查询收藏的商品是否存在
+        if not existsid:
+            continue
+        comm = models.Commdity.objects.get(id=comm_id)
+        time = i.enshrinetime
+        comm_list.append({
+            'comm': comm,
+            'time': time,
+        })
+        if not comm_list:
+            message = "抱歉，您收藏的商品被删除了！"
+            return render(req, 'user/list_favorite.html', {'title': title, 'message': message})
+    return render(req, 'user/list_favorite.html', {'title': title, 'comm': comm_list})
+
+
+

@@ -6,7 +6,7 @@ class AuthMiddleware(MiddlewareMixin):
     def process_request(self,req):
         #a.排除可直接访问的页面
         #当前请求的url:requset.path_info
-        if req.path_info in ['','/index/','/login/','/image/code/','/register/','/article/list/']:
+        if req.path_info in ['','/index/','/login/','/image/code/','/register/','/article/list/','/chocies/fav/']:
             return
 
         #b.读取当前用户的session信息

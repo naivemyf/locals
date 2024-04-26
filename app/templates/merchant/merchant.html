@@ -1,0 +1,62 @@
+{% extends "user/layout.html" %}
+{% load static %}
+{% block title %}
+    <title>商家页面</title>
+{% endblock %}
+
+
+{% block nav %}
+      <ul class="nav navbar-nav">
+        <li ><a href="/merchant/">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="/commdity/list/">我的商品</a></li>
+          <li><a href="/commdity/add/">发布商品</a></li>
+          <li><a href="/phone/list/">搜素</a></li>
+          <li><a href="#">Link</a></li>
+      </ul>
+{% endblock %}
+
+
+{% block login %}
+{#      判断是否已经登录#}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >{{ request.session.info.name }}<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+              <li><a href="#">个人信息</a></li>
+              <li><a href='/merchant/fav/'>我收藏的</a></li>
+              <li><a>修改信息</a></li>
+              <li><a href="/logout/">退出</a></li>
+          </ul>
+        </li>
+{% endblock %}
+
+{% block content %}
+{#    <div style="margin-left: auto;margin-right: auto;background: url("{% static 'img/web/nav admin.jpeg' %}");">#}
+    <div class="container"  >
+    <div class="panel panel-info" >
+      <img src="{% static  "img/web/nav1.jpg" %}" width="1140px" height="350px;">
+    </div>
+<div class="panel panel-info" >
+      <div class="panel-heading">
+        <div class="col-xs-2"><h2 class="panel-title">您好，商家{{request.session.info.name}}</h2></div><label>现在是{% now "Y-m-d " %}</label>
+      </div>
+      <div class="panel-body" style="margin-left: 20%;">
+            <div style="margin-top: 40px;"></div>
+          {% if data %}
+              <label style="font-size: 20px;">您的商品情况：</label>
+              <div style="margin-top: 25px;"></div>
+              <div style="margin-left: 15%;font-size: 15px;">
+                  <div><td>总商品数量：{{ data.comm_counts  }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/commdity/list/">查看</a></td></div>
+                  <div style="margin-top: 20px;"></div>
+                  <div><td >未审核商品数量为：{{ data.unad_comm }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/commlistno/">查看</a></td></div>
+                  <div style="margin-top: 20px;"></div>
+                  <div><td>审核通过的商品数量为：{{ data.ad_comm }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/melistno/">查看</a></td></div></div>
+          {% else %}
+              <label>目前暂无审核任务</label>
+          {% endif %}
+       <div style="margin-top: 40px;"></div>
+      </div>
+    </div>
+
+</div>
+    </div>
+{% endblock %}

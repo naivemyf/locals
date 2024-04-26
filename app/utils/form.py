@@ -25,11 +25,11 @@ class RegisterForm(BootsrapModel):
         widget=forms.PasswordInput(render_value=True),
         required=True
     )
-    role = forms.ModelChoiceField(
-        label="角色",
-        queryset=models.Role.objects.all()[:2],
-        required=True
-    )
+    # role = forms.ModelChoiceField(
+    #     label="角色",
+    #     queryset=models.Role.objects.all()[:2],
+    #     required=True
+    # )
 
     class Meta:
         model =models.User
@@ -82,7 +82,22 @@ class LoginForm(BootsrapForm):
 
 # 文章添加类
 class ArticleAdd(BootsrapModel):
+    tag = forms.ModelChoiceField(queryset= models.Choice.objects.all(), empty_label="请选择标签")
+    class Meta:
+        model = models.Article
+        exclude = ["username", "status", "collect","tag"]
+
+class ArticleEdit(BootsrapModel):
+    select_tag = forms.ModelChoiceField(queryset= models.Choice.objects.all(),
+                                        empty_label="请选择标签",
+                                        label="请选择新标签：",
+                                        blank=True,
+                                        required=False)
     class Meta:
         model = models.Article
         exclude = ["username", "status", "collect"]
+        widgets = {
+            'tag': forms.TextInput(attrs={'readonly': 'readonly'}),
+        }
+
 

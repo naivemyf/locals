@@ -85,7 +85,7 @@ WSGI_APPLICATION = "Localspecialty.wsgi.application"
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'localspe',
+        'NAME': 'LocalSpe',
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '47.109.131.224',
@@ -140,3 +140,4 @@ MEDIA_ROOT = BASE_DIR / 'app/static/pic/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
