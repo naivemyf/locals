@@ -42,13 +42,6 @@ class User(models.Model):
     def __str__(self):#用str函数使modelform中可自动生成user中的内容
         return self.username #返回用户名
 
-
-# class Food(models.Model):
-#     food_name = models.CharField(verbose_name="特产类目", max_length=16,blank=True,null=True)
-#     def __str__(self):
-#         return self.food_name
-
-
 class Commdity(models.Model):
     """商品表"""
     commdityname = models.CharField(verbose_name="特产名", max_length=24)
@@ -107,7 +100,6 @@ class Choice(models.Model):
         return self.name
 
 class Recommend(models.Model):
-    user = models.CharField(verbose_name='用户名',max_length=16)
 
-    score_user = models.DecimalField(verbose_name='用户评分', max_digits=4, decimal_places=4)
-    score_item = models.DecimalField(verbose_name='商品评分', max_digits=4, decimal_places=4)
+    user = models.CharField(verbose_name='用户名',max_length=16)
+    score = models.CharField(verbose_name='评分',max_length=64, blank=True, null=True,)

@@ -9,8 +9,7 @@ from app.utils.form import RegisterForm, LoginForm
 
 #注册
 def register(req):
-    #"""注册"""
-
+    """注册"""
     if req.method == "GET":
         form = RegisterForm()
         return render(req, 'user/register.html', {'form': form})
@@ -18,10 +17,11 @@ def register(req):
     if form.is_valid():
         rid = form.cleaned_data.get("role").id
         if rid == 1:
+            req.session["account"] = form.cleaned_data.get("username")
             form.save()
-            return redirect("/login/")
+            return redirect("/chocies/fav/")
         elif rid == 2:
-            form.instance.process =0
+            form.instance.process = 0
             form.save()
             return HttpResponse('<p style="text-align:center;font-size: 60px">注册成功，请等待管理员审核<p>')
         elif rid == 3:
@@ -76,7 +76,7 @@ def login(req):
         elif rid == 2 and admin_object.process == 1:#已审核商家
             return redirect("/merchant/")
         elif rid == 3:#管理员
-            return redirect("/index/")
+            return redirect("/admin/")
     return render(req, 'user/login.html', {'form': form})
 
 # 生成验证码
