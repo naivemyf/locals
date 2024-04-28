@@ -36,11 +36,20 @@ def listme(req):
     obj = models.Article.objects.filter(username=name).all()
     return render(req, "article/art_list.html", {'obj': obj, "title": title})
 
+
 # 文章详情
 def art_detail(req,nid):
-    title = "文章信息"
     """文章详情"""
-    uname = req.session["info"]["name"]
+    title = "文章信息"
+    uname = None
+    rid = None
+    info = req.session.get('info', None)
+    if info:
+        uname =info.get('name')
+    exists = models.User.objects.filter(username=uname).exists()
+    if exists:
+        rid = models.User.objects.get(username=uname)
+        rid = rid.role.id
     obj = models.Article.objects.filter(id=nid).first()
     exists = models.Enshrine.objects.filter(username=uname, art_id=nid).exists()
     if exists:
@@ -50,7 +59,7 @@ def art_detail(req,nid):
             exists = False
     if not obj:
         return redirect("article/listme")
-    return render(req,"user/list_content.html", {"obj": obj,"title":title,"exists":exists})
+    return render(req,"user/list_content.html", {"obj": obj,"title":title,"exists":exists,"rid":rid})
 
 # 文章编辑
 def art_edit(req,nid):

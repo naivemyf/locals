@@ -67,7 +67,15 @@ def commditylist(req):
 # 我的商品详情（商家）
 def comm_detail(req,nid):
     title = "特产信息"
-    uname = req.session["info"]["name"]
+    uname = None
+    rid = None
+    info = req.session.get('info', None)
+    if info:
+        uname = info.get('name')
+    exists = models.User.objects.filter(username=uname).exists()
+    if exists:
+        rid = models.User.objects.get(username=uname)
+        rid = rid.role.id
     obj= models.Commdity.objects.filter(id=nid).first()
     exists = models.Enshrine.objects.filter(username=uname ,comm_id=nid).exists()
     if exists:
@@ -77,7 +85,7 @@ def comm_detail(req,nid):
             exists = False
     if not obj:
         messages.error(req,"商品不存在！")
-    return render(req,"user/list_content.html",{"obj":obj,"title":title,"exists":exists})
+    return render(req,"user/list_content.html",{"obj":obj,"title":title,"exists":exists,"rid":rid})
 
 
 # 商品编辑（商家）

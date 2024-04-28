@@ -71,7 +71,29 @@ if (name){
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />
     <link rel="stylesheet" type="text/css" href="{% static "css/zhonglingxm2.css" %}" />
-{% block csslist %}{% endblock %}
+{% block csslist %}
+        <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto auto auto;
+            padding: 10px;
+
+        }
+        .grid-item {
+            border: none ;
+            font-size: 15px;
+            text-align: center;
+            width: 200px;
+            height: 150px;
+            margin-top: 60px;
+        }
+         .grid-item img {
+            width: 200px; /* 设置图片宽度 */
+            height: 150px; /* 设置图片高度 */
+        }
+}
+    </style>
+{% endblock %}
 {% endblock %}
 
 
@@ -107,58 +129,44 @@ if (name){
     	<ul class="tuijian-right f-l">
         	<li>
             	<div class="li-box li-box1">
-                	<a href="JavaScript:;" class="li-a1">锦尚世家</a>
-                	<a href="JavaScript:;" class="li-a2">锦绣花苑　传承世家</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">茶叶</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box2">
-                	<a href="JavaScript:;" class="li-a1">速8快捷酒店</a>
-                	<a href="JavaScript:;" class="li-a2">最大的经济型酒店</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">酒水</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box3">
-                	<a href="JavaScript:;" class="li-a1">老诚一锅羊蝎子火锅</a>
-                	<a href="JavaScript:;" class="li-a2">最养生的火锅</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">食品</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box4">
-                	<a href="JavaScript:;" class="li-a1">鹏程之家汽车店</a>
-                	<a href="JavaScript:;" class="li-a2">最便宜的汽车4S店</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">中草药</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box5">
-                	<a href="JavaScript:;" class="li-a1">速8快捷酒店</a>
-                	<a href="JavaScript:;" class="li-a2">最大的经济型酒店</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">工艺品</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box6">
-                	<a href="JavaScript:;" class="li-a1">老诚一锅羊蝎子火锅</a>
-                	<a href="JavaScript:;" class="li-a2">最养生的火锅</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">特色服饰</a>
+
                 </div>
             </li>
         	<li>
             	<div class="li-box li-box7">
-                	<a href="JavaScript:;" class="li-a1">鹏程之家汽车店</a>
-                	<a href="JavaScript:;" class="li-a2">最便宜的汽车4S店</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box8">
-                	<a href="JavaScript:;" class="li-a1">鹏程之家汽车店</a>
-                	<a href="JavaScript:;" class="li-a2">最便宜的汽车4S店</a>
-                    <a href="JavaScript:;" class="li-a3">more</a>
+                	<a href="JavaScript:;" class="li-a1">其他</a>
+
                 </div>
             </li>
             <div style="clear:both;"></div>
@@ -166,26 +174,57 @@ if (name){
         <div style="clear:both;"></div>
     </div>
 
-    <!--1F  在线商城-->
+    <!--文章-->
     <div class="zl-info w1200">
     	<div class="zl-title1">
-        	<h3 class="title1-h3 f-l">1F  在线商城</h3>
+        	<h3 class="title1-h3 f-l">文章推荐</h3>
             <ul class="title1-ul1 f-r">
-            	<li class="current"><a href="JavaScript:;">食品/饮料/酒水</a></li>
-            	<li><a href="JavaScript:;">粮油副食</a></li>
+            	<li class="current"><a href="/article/list/">更多文章</a></li>
+            	<li><a href="#"></a></li>
                 <div style="clear:both;"></div>
             </ul>
-            <div style="clear:both;"></div>
         </div>
-                {% if res %}
-                    <ul class="rbox-right f-l">
-                        {% for item in res %}
-                            <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>没有推荐列表数据。</p>
-                {% endif %}
+{#        红线结束#}
+            <div class="bs-example" data-example-id="simple-responsive-table">
+    <div class="table-responsive">
+
+      <table class="table">
+        <tbody>
+        {% if rec_list.art %}
+              {% for i in rec_list.art %}
+          <tr>
+            <th scope="row"><a href="/article/{{ i.id }}/detail/">{{ i.title }}</a></th>
+            <td>{{ i.timestamp|date:'Y-m-d H:i:s'}}</td>
+            <td>{{ i.username }}</td>
+            <td>{{ i.tag }}</td>
+          </tr>
+              {% endfor %}
+              {% endif %}
+        </tbody>
+      </table>
+
+    </div><!-- /.table-responsive -->
+        </div>
+    </div>
+    <!--商品-->
+    <div class="zl-info w1200">
+    	<div class="zl-title1">
+        	<h3 class="title1-h3 f-l">商品推荐</h3>
+            <ul class="title1-ul1 f-r">
+            	<li class="current"><a href="/commdity/listall/">更多商品</a></li>
+            	<li><a href="#"></a></li>
+                <div style="clear:both;"></div>
+            </ul>
+        </div>
+        <div class="grid-container"  >
+            {% if rec_list.comm %}
+            {% for i in rec_list.comm %}
+            <div class="grid-item" ><img src="{{ i.pic.url }}"><a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
+                <p>{{ i.createtime|date:'Y-m-d H:i:s' }}</p></div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
 
     </div>
 {% endblock %}

@@ -3,8 +3,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from app import models
 from app.utils.code import check_code
 from app.utils.form import RegisterForm, LoginForm
-
-
+from django.contrib import auth
 
 
 #注册
@@ -68,6 +67,7 @@ def login(req):
             "role_id": admin_object.role_id}
         # 七天免登录
         req.session.set_expiry(60 * 60 * 24 * 7)
+
         rid = admin_object.role_id
         if rid == 1:#普通使用者
             return redirect('/index/')#信息正确，跳转首页
