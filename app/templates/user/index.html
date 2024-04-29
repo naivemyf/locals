@@ -219,7 +219,13 @@ if (name){
         <div class="grid-container"  >
             {% if rec_list.comm %}
             {% for i in rec_list.comm %}
-            <div class="grid-item" ><img src="{{ i.pic.url }}"><a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
+            <div class="grid-item" >
+                {% if i.pic %}
+                <img src="{{ i.pic.url }}">
+                {% else %}
+                <img src="{% static 'img/web/defalut.jpg' %}">
+                {% endif %}
+                <a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
                 <p>{{ i.createtime|date:'Y-m-d H:i:s' }}</p></div>
             {% endfor %}
             {% endif %}
