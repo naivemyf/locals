@@ -36,7 +36,7 @@
                 <tbody >
                 {% for i in list %}
                     <tr>
-                        <th>{{ i.id }}</th>
+                        <th>{{ forloop.counter }}</th>
                         <td><a href="/commdity/{{ i.id}}/detail/" >{{ i.commdityname}}</a></td>
 {#                        <td>{{ i.price }}</td>#}
 
@@ -66,6 +66,9 @@
                 </tbody>
             </table>
         </div>
+  <ul class ="pagination">
+        {{page_string}}
+    </ul>
     </div>
 
     <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

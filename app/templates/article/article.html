@@ -12,6 +12,16 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"
 ></script>
     <script src="{%  static 'js/wang_editor_config.js' %}"></script>
+    <script>
+    function checkResAndSubmit() {
+            var res = {{ res }};
+            if (res > 0) {
+                alert("文章内容中出现敏感词，请修改！！！");
+                return false;
+            }
+            return true;
+        }
+    </script>
 {% endblock %}
 
 
@@ -24,7 +34,7 @@
 
             <div class="panel-body">
                 {#novalidate的作用是禁止浏览器自动校验#}
-                <form method="post" novalidate>
+                <form method="post" novalidate onsubmit="return checkResAndSubmit();">
                     {% csrf_token %}
 
                     {% for field in form %}

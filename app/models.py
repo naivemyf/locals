@@ -85,6 +85,8 @@ class Commdity(models.Model):
         blank=True,
         null=True,
         max_length=32)
+    message = models.CharField(max_length=512, verbose_name="备注", null=True, blank=True)
+    timemes = models.DateTimeField(verbose_name="信息时间",null=True, blank=True)
 
     def __str__(self):
         return self.commdityname
@@ -111,12 +113,15 @@ class Article(models.Model):
         max_length=32)
     status_choice = (
         (0, "待审核"),
-        (1, "审核通过")
+        (1, "初步审核"),
+        (2, "审核通过")
     )
     status = models.SmallIntegerField(
         verbose_name="审核状态",
         choices=status_choice,
         default=0)
+    message = models.CharField(max_length=512,verbose_name="备注",null=True,blank=True)
+    timemes = models.DateTimeField(verbose_name="信息时间", null=True, blank=True)
 
 
 class Enshrine(models.Model):

@@ -14,13 +14,13 @@
 {% endblock %}
 
 {% block nav %}
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" style="margin-top: 25px;">
         <li ><a href="/index/">首页 <span class="sr-only">(current)</span></a></li>
         <li><a href="/article/list/">文章列表</a></li>
           <li><a href="/commdity/listall/">商品列表</a></li>
           <li><a href="/article/add/">发布文章</a></li>
-          <li><a href="/phone/list/">搜素</a></li>
-          <li><a href="#">Link</a></li>
+          <li><a href="/search/list/">搜素</a></li>
+
       </ul>
 {% endblock %}
 
@@ -30,40 +30,41 @@
     <script type="text/javascript" src="{% static 'js/zhonglin.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/zhongling2.js' %}"></script>
     <script>
-    $(document).ready(function (){
-{#判断角色#}
-function getRole(rid) {
-    var a;
-    if (rid == 1) {
-        a = "<li><a href='/article/listme/'>我发布的</a></li>";
-        a=a+"<li><a href='/user/fav/'>我收藏的</a></li>";
-    } else if (rid == 2) {
-        a = "<li><a href='/merchant/'>商家页面</a></li>";
-        a=a+"<li><a href='/merchant/fav/'>我收藏的</a></li>";
-    } else if (rid == 3) {
-        a = "<li><a href='/admin/'>管理页面</a></li>";
-        a=a+"<li><a href='/admin/fav/'>我收藏的</a></li>";
-    }
-    return a;
-}
-{#角色存在#}
-var name = "{{request.session.info.name}}";
-if (name){
-    var rid ="{{ request.session.info.role_id }}";
-    var li="<li><a href='#'>个人信息</a></li>";
-    getRole(rid);
-    b="<li role='separator' class='divider'></li><li><a href='/logout/'>退出</a></li></ul></li>";
-    x=li+getRole(rid)+b;
-    $("#navnav").html(x);
-    $("#name").html(name);
-}else {
-    $(".dropdown").empty()
-    x="<li><a href='/login/' style='color:grey'>登录</a></li>";
-    $("#loginnav").html(x);
-}
+    $(document).ready(function () {
+        {#判断角色#}
+
+        function getRole(rid) {
+            var a;
+            if (rid == 1) {
+                a = "<li><a href='/article/listme/'>我发布的</a></li>";
+                a = a + "<li><a href='/user/fav/'>我收藏的</a></li>";
+            } else if (rid == 2) {
+                a = "<li><a href='/merchant/'>商家页面</a></li>";
+                a = a + "<li><a href='/merchant/fav/'>我收藏的</a></li>";
+            } else if (rid == 3) {
+                a = "<li><a href='/admin/'>管理页面</a></li>";
+                a = a + "<li><a href='/admin/fav/'>我收藏的</a></li>";
+            }
+            return a;
+        }
+
+        {#角色存在#}
+        var name = "{{request.session.info.name}}";
+        if (name) {
+            var rid = "{{ request.session.info.role_id }}";
+            var li = "<li><a href='/user/{{ request.session.info.id }}/info/'>个人信息</a></li>";
+            getRole(rid);
+            b = "<li role='separator' class='divider'></li><li><a href='/logout/'>退出</a></li></ul></li>";
+            x = li + getRole(rid) + b;
+            $("#navnav").html(x);
+            $("#name").html(name);
+        } else {
+            $(".dropdown").empty()
+            x = "<li><a href='/login/' style='color:grey'>登录</a></li>";
+            $("#loginnav").html(x);
+        }
     })
 </script>
-
     {% block jsartlist %}
     {% endblock %}
 {% endblock %}
@@ -91,7 +92,7 @@ if (name){
             width: 200px; /* 设置图片宽度 */
             height: 150px; /* 设置图片高度 */
         }
-}
+
     </style>
 {% endblock %}
 {% endblock %}
@@ -124,51 +125,13 @@ if (name){
     <!--热门推荐-->
     <div class="zl-tuijian w1200">
     	<div class="tuijian-left f-l">
-        	<img src="{% static "img/zl2-1.png" %}" />
+        	<img src="{% static "img/index/微信图片_20240430210829.jpg" %}"
+            style="height: 127px;"/>
         </div>
     	<ul class="tuijian-right f-l">
-        	<li>
-            	<div class="li-box li-box1">
-                	<a href="JavaScript:;" class="li-a1">茶叶</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box2">
-                	<a href="JavaScript:;" class="li-a1">酒水</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box3">
-                	<a href="JavaScript:;" class="li-a1">食品</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box4">
-                	<a href="JavaScript:;" class="li-a1">中草药</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box5">
-                	<a href="JavaScript:;" class="li-a1">工艺品</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box6">
-                	<a href="JavaScript:;" class="li-a1">特色服饰</a>
-
-                </div>
-            </li>
-        	<li>
-            	<div class="li-box li-box7">
-                	<a href="JavaScript:;" class="li-a1">其他</a>
-
-                </div>
-            </li>
+            {% for i in tag %}
+        	<li><div class="li-box li-box{{ forloop.counter }}"><a href="/tag/{{ i.id }}/"  class="li-a1">{{ i.name }}</a></div></li>
+        	{% endfor %}
             <div style="clear:both;"></div>
         </ul>
         <div style="clear:both;"></div>
@@ -231,6 +194,12 @@ if (name){
             {% endif %}
 
         </div>
-
+<hr style=" margin-top:80px;border: 1px solid grey;width: 100%;">
+    </div>
+    <div class="footer" style="margin-top: 25px;">
+    <p style="color: grey">内容由myf提供，仅供您参考</p>
+    <p style="color: grey">用户协议  |  隐私政策 </p>
+    <P style="color: grey">联系方式  |QQ：1749575316</P>
     </div>
 {% endblock %}
+

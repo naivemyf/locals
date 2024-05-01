@@ -34,10 +34,14 @@ urlpatterns = [
     # 首页
     path("", index.index),  # 网站默认页面首页
     path("index/", index.index),  # 网站首页
+    path('tag/<int:nid>/',index.tag),  # index标签页
 
     # 用户操作
     path("user/fav/",account.favindex),   # 用户收藏
     path("user/favcomm/",account.favindexcomm),   # 用户收藏
+    path("user/<int:nid>/info/",account.myinfo),  # 用户信息
+    path("user/myinfo/detail/",account.detail_myinfo),  # 用户信息详情
+    path("user/myinfo/edit/",account.edit_myinfo),  # 用户信息编辑
 
     # 注册
     path("register/", account.register),  # 注册
@@ -67,6 +71,7 @@ urlpatterns = [
     path("admin/comm/batch-audit/", admin.comm_batch),  # 文章批量审核
     path("admin/art/status/",admin.art_status),  # 文章审核
     path("admin/art/batch-audit/",admin.art_batch),  # 文章批量审核
+    path("admin/art/nostatus/",admin.art_nostatus),  # 未通过审核
     path("admin/me/status/",admin.me_status),  # 商家审核
     path("admin/fav/",account.favindex),  # 管理员收藏
     path("admin/favcomm/",account.favindexcomm),  # 管理员收藏

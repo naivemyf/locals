@@ -52,9 +52,9 @@
       {% for i in obj %}
         <tr>
             {% if title == "我的文章列表" %}
-          <th scope="row">{{ i.id }}</th>
+                <th scope="row"><a  href="/article/{{ i.id }}/detail/">{{ forloop.counter }}</a></th>
         {% else %}
-                <th scope="row">hhztcart5325{{ i.id }}</th>
+                <th scope="row"><a  href="/article/{{ i.id }}/detail/">{{ forloop.counter }}</a></th>
         {% endif %}
           <td><a  href="/article/{{ i.id }}/detail/">{{ i.title}}</a></td>
             <td>{{ i.timestamp }}</td>
@@ -83,6 +83,9 @@
     </table>
 
         </div>
+ <ul class ="pagination">
+        {{page_string}}
+    </ul>
     </div>
 
 {#    警告框#}

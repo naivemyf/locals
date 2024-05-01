@@ -27,7 +27,7 @@
     <li class="dropdown " >
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" id="name">{{request.session.info.name}}</a>
     <ul class="dropdown-menu" >
-        <li><a href="#">个人信息</a></li>
+        <li><a href="/user/{{ request.session.info.id }}/info/">个人信息</a></li>
         <li><a href="/admin/">管理页面</a></li>
         <li role="separator" class="divider"></li>
         <li><a href="/logout/">退出</a></li></ul>

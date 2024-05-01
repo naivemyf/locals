@@ -6,6 +6,7 @@ from app import models
 from django import forms
 from django.views.decorators.csrf import csrf_exempt  # csrf用于Ajax
 from django.contrib import messages
+from app.utils.pagination import PaginationComm
 
 # 商品添加类
 
@@ -66,8 +67,13 @@ def commditylistme(req):
     title = "我发布的商品"
     name = req.session["info"]["name"]
     list = models.Commdity.objects.filter(username=name).order_by("createtime")
-    return render(req, "commdity/comm_mylist.html",
-                  {"title": title, "list": list})
+    page_obj = PaginationComm(req, list)
+    context = {
+        "title": title,
+        "list": page_obj.page_queryset,
+        "page_string": page_obj.html()
+    }
+    return render(req, "commdity/comm_mylist.html",context)
 
 
 # 商品列表（用户）
@@ -75,12 +81,15 @@ def commditylist(req):
     """商品列表"""
     title = "商品列表"
     list = models.Commdity.objects.filter(status=1).all()
-    return render(req, "commdity/comm_alllist.html",
-                  {"title": title, "list": list})
+    page_obj = PaginationComm(req, list)
+    context = {
+        "title": title,
+        "list": page_obj.page_queryset,
+        "page_string": page_obj.html()
+    }
+    return render(req, "commdity/comm_alllist.html", context)
 
 # 我的商品详情（商家）
-
-
 def comm_detail(req, nid):
     title = "特产信息"
     uname = None
@@ -124,8 +133,6 @@ def comm_edit(req, nid):
                   {'form': form, "title": title})
 
 # 删除商品（商家）
-
-
 def comm_delete(req):
     uid = req.GET.get("uid")
     exists = models.Commdity.objects.filter(id=uid).exists()
@@ -138,8 +145,6 @@ def comm_delete(req):
     return JsonResponse({"status": True})
 
 # 收藏商品
-
-
 def comm_favorite(req, id):
     uname = req.session["info"]["name"]
     exists = models.Enshrine.objects.filter(
@@ -149,9 +154,8 @@ def comm_favorite(req, id):
         model = models.Enshrine(username=uname, comm_id=id)
         model.save()
     return JsonResponse({'exists': exists})
+
 # 取消收藏商品
-
-
 def comm_fav_del(req, id):
     uname = req.session["info"]["name"]
     models.Enshrine.objects.filter(username=uname, comm_id=id).update(status=0)

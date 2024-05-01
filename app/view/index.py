@@ -5,6 +5,7 @@ import sys
 from app import models
 import ast
 from collections import defaultdict
+from django.views.decorators.csrf import csrf_exempt  # csrf用于Ajax
 
 
 def index(req):
@@ -34,13 +35,15 @@ def index(req):
             res = recommend(name, nested_dict)  # 实列推荐算法
             req.session['account'] = ''  # 清空account的内容
             rec_list = indexhtml(res)  # 推荐文章和特色商品的值进行百分比计数，后返回相应的篇数
-            return render(req, "user/index.html", {"rec_list": rec_list})
+            tag = models.Choice.objects.all()
+            return render(req, "user/index.html", {"rec_list": rec_list, "tag": tag})
     else:
         count = models.Enshrine.objects.filter(username=name).count()
         if count > 10:
             res = most_list(name)
             rec_list = indexhtml(res)
-            return render(req, 'user/index.html', {"rec_list": rec_list})
+            tag = models.Choice.objects.all()
+            return render(req, 'user/index.html', {"rec_list": rec_list, "tag": tag})
         else:
             top_rec = top_recommed()  # 实列前二十推荐
             art_list = []
@@ -53,11 +56,10 @@ def index(req):
                 'art': art_list,
                 'comm': comm_list,
             }
-            return render(req, "user/index.html", {"rec_list": rec_list})
+            tag = models.Choice.objects.all()
+            return render(req, "user/index.html", {"rec_list": rec_list, "tag": tag})
 
 #  合并字典
-
-
 def new_dict(dict1, dict2):
     """合并字典"""
     for key, value in dict2.items():
@@ -67,7 +69,7 @@ def new_dict(dict1, dict2):
             dict1[key] = value
     return dict1
 
-
+# 计算标签占比
 def indexhtml(res):
     rec_list = res[0]
     # 计算所有标签值的总和
@@ -84,3 +86,16 @@ def indexhtml(res):
             'comm': comm_list,
         }
     return rec_list
+
+# 标题列表
+def tag(req,nid):
+    tag = models.Choice.objects.filter(id=nid).first()
+    tag = tag.name
+    tag_art = models.Article.objects.filter(tag=tag).all()
+    tag_comm = models.Commdity.objects.filter(tag=tag).all()
+    content ={
+        "tag":tag,
+        "tag_art":tag_art,
+        "tag_comm":tag_comm
+    }
+    return render(req,"user/tag_list.html",{"content":content})

@@ -1,11 +1,13 @@
+import json
 from io import BytesIO
 from django.shortcuts import render, HttpResponse, redirect
 from app import models
 from app.utils.code import check_code
 from app.utils.form import RegisterForm, LoginForm
 from django.contrib import auth
-
-
+from app.utils.bootsrap import BootsrapForm,BootsrapModel
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 #注册
 def register(req):
     """注册"""
@@ -161,5 +163,58 @@ def favindexcomm(req):
             return render(req, 'user/list_favorite.html', {'title': title, 'message': message})
     return render(req, 'user/list_favorite.html', {'title': title, 'comm': comm_list})
 
+class Myinfo(BootsrapModel):
+    class Meta:
+        model = models.User
+        exclude=['subadmin','process','role_id']
+#  我的信息
+def myinfo(req,nid):
+    if req.method == "GET":
+        form = models.User.objects.filter(id=nid).first()
+        name = req.session["info"]["name"]
+        art = models.Article.objects.filter(username=name,status=1).all()
+        art_list = []
+        for i in art:
+            if i.message:
+                art_dict ={
+                    "id":i.id,
+                    "mes":i.message,
+                    "time":i.timemes,
+                    "title":i.title,
+                    "createtime":i.timestamp,
+                }
+                art_list.append(art_dict)
+        return render(req, 'user/user_mess.html', {'obj': form,"art":art_list})
+    # return render(req,'user/user_mess.html',{'form':form})
 
+def detail_myinfo(req):
+    uid = req.GET.get("uid")
+    obj = models.User.objects.filter(id=uid).first()
+    obj_dict = models.User.objects.filter(id=uid).values("username", "password", "phonenumber").first()
+    if not obj:
+        return JsonResponse({
+            "status": False,
+            "error": "修改失败，数据不存在",
+        })
+        # JsonResponse返回状态Flase和错误
+    return JsonResponse({"status": True, "data": obj_dict})
 
+@csrf_exempt
+def edit_myinfo(req):
+    if req.method == "GET":
+        uid = req.GET.get("uid")
+        obj = models.User.objects.filter(id=uid).first()
+        if not obj:
+            return JsonResponse({
+                "status": False,
+                "tips": "修改失败，数据不存在",
+            })
+            # JsonResponse返回状态Flase和错误
+        forms = Myinfo(data=req.POST, instance=obj)
+
+        if forms.is_valid():
+            forms.save()
+            data_dict = {"status": True}
+            return HttpResponse(json.dumps(data_dict))
+        data_dict = {"status": False, 'error': forms.errors}
+        return HttpResponse(json.dumps(data_dict, ensure_ascii=False))  # 返回状态Flase和错误

@@ -85,7 +85,7 @@ class ArticleAdd(BootsrapModel):
     tag = forms.ModelChoiceField(queryset= models.Choice.objects.all(), empty_label="请选择标签")
     class Meta:
         model = models.Article
-        exclude = ["username", "status", "collect","tag"]
+        exclude = ["username", "status", "collect","tag","message","timemes"]
 
 class ArticleEdit(BootsrapModel):
     select_tag = forms.ModelChoiceField(queryset= models.Choice.objects.all(),

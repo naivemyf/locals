@@ -1,9 +1,10 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from app.utils.bootsrap import BootsrapModel, BootsrapForm
 from app import models
 from app.utils.form import ArticleAdd,ArticleEdit
-
+from app.utils.pagination import Pagination
+from app.utils.sensitivewords import SensitiveFilter
 # 文章添加
 def articleadd(req):
     """文章添加"""
@@ -12,11 +13,17 @@ def articleadd(req):
         form = ArticleAdd()
         return render(req, "article/article.html", {'form': form, "title":title})
     form = ArticleAdd(data=req.POST)
+    res = None
     if form.is_valid():
         form.instance.username = req.session["info"]["name"]
-        form.instance.status = 0
+        form.instance.status = 1
         form.instance.collect = 0
         form.instance.tag = form.cleaned_data["tag"]
+        str = form.cleaned_data['content']
+        Filter = SensitiveFilter()
+        res = Filter.replaceSensitive(txt=str)
+        if res:
+            return render(req, "article/article.html", {'form': form, "title": title, "res": res})
         form.save()
         return redirect('/article/listme/')
     return render(req, "article/article.html", {'form': form, "title":title})
@@ -25,8 +32,14 @@ def articleadd(req):
 def list(req):
     """所有文章列表"""
     title = "文章列表"
-    obj = models.Article.objects.filter(status=1).all()
-    return render(req, "article/art_list.html", {'obj': obj, "title": title})
+    obj = models.Article.objects.filter(status=2).all()
+    page_obj = Pagination(req, obj)
+    context = {
+        "title": title,
+        "list": page_obj.page_queryset,
+        "page_string": page_obj.html()
+    }
+    return render(req, "article/art_list.html", context)
 
 # 我的文章列表
 def listme(req):
@@ -34,7 +47,13 @@ def listme(req):
     title= "我的文章列表"
     name = req.session["info"]["name"]
     obj = models.Article.objects.filter(username=name).all()
-    return render(req, "article/art_list.html", {'obj': obj, "title": title})
+    page_obj = Pagination(req, obj)
+    context = {
+        "title": title,
+        "obj": page_obj.page_queryset,
+        "page_string": page_obj.html()
+    }
+    return render(req, "article/art_list.html", context)
 
 
 # 文章详情
@@ -113,6 +132,7 @@ def art_fav_del(req,id):
         return JsonResponse({"status": True})
     return JsonResponse({"status": False})
 
+# 我的文章收藏
 def art_fav_list(req):
     title = "我的文章收藏"
     uname = req.session["info"]["name"]

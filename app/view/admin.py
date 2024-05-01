@@ -6,10 +6,10 @@ from app import models
 from django import forms
 from app.utils.bootsrap import BootsrapModel
 # from app.utils.form import Adminreset, AdminUpadte, AdminModelForm
-
+from datetime import datetime
 
 def adminindex(req):
-    art_counts = models.Article.objects.filter(status=0).count()
+    art_counts = models.Article.objects.filter(status=1).count()
     comm_counts = models.Commdity.objects.filter(status=0).count()
     me_counts = models.User.objects.filter(process=0).count()
     data={
@@ -29,7 +29,7 @@ class Ad_art(BootsrapModel):
 def ad_art_list_no(req):
     """未审核文章列表"""
     title='未审核文章'
-    art_list = models.Article.objects.filter(status=0).all()
+    art_list = models.Article.objects.filter(status=1).all()
     return render(req,"admin/ad_art_list.html", {'art_list': art_list, "title": title})
 
 #  文章列表
@@ -93,7 +93,7 @@ def comm_status(req):
     models.Commdity.objects.filter(id=uid).update(status=1)
     return JsonResponse({"status": True})
 
-#  批量审核文章
+#  批量审核商品
 def comm_batch(req):
     if req.method == 'POST':
         uids = req.POST.getlist('uids[]')
@@ -116,7 +116,7 @@ def art_status(req):
             "status": False,
             "error": "审核失败，数据出错",
         })  # JsonResponse返回状态Flase和错误
-    models.Article.objects.filter(id=uid).update(status=1)
+    models.Article.objects.filter(id=uid).update(status=2)
     return JsonResponse({"status": True})
 
 #  批量审核文章
@@ -130,8 +130,23 @@ def art_batch(req):
                     "status": False,
                     "error": "审核失败，数据出错",
                 })
-            models.Article.objects.filter(id=uid).update(status=1)
+            models.Article.objects.filter(id=uid).update(status=2)
         return JsonResponse({'status': True})
+
+def art_nostatus(req):
+    if req.method == 'GET':
+        uid = req.GET.get('uid')
+        res = req.GET.get('res')
+        timemes = datetime.now()
+        obj = models.Article.objects.filter(id=uid).first()
+        if not obj:
+            return JsonResponse({
+                "status": False,
+                "error": "审核失败，数据出错",
+            })
+        models.Article.objects.filter(id=uid).update(message=res,timemes=timemes)
+        return JsonResponse({'status': True})
+
 
 #  审核商家
 def me_status(req):
