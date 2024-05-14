@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
+    "ckeditor",
 ]
 #中间件
 MIDDLEWARE = [
@@ -85,13 +86,16 @@ WSGI_APPLICATION = "Localspecialty.wsgi.application"
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'LocalSpe',
+        'NAME': 'localspe',
         'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '47.109.131.224',
-        'PORT': '3307',
+        'PASSWORD': 'Zacv234@3',
+        'HOST': 'cd-cynosdbmysql-grp-a8ub8if2.sql.tencentcdb.com',
+        'PORT': '22897',
     }#连接本地数据库MySQL
 }
+# 创建数据库并设置字符集
+
+
 
 
 # Password validation
@@ -141,3 +145,62 @@ MEDIA_ROOT = BASE_DIR / 'app/static/pic/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+#使用ck的工具栏并修改，宽度自适应
+CKEDITOR_CONFIGS = {
+    # django-ckeditor默认使用default配置
+    'default': {
+        # 编辑器宽度自适应
+        'width':'auto',
+        'height':'300px',
+        # tab键转换空格数
+        'tabSpaces': 4,
+        # 工具栏风格
+        'toolbar': 'Custom',
+        # 工具栏按钮
+        'toolbar_Custom': [
+            # 预览、表情
+            ['Preview','Smiley'],
+            # 字体风格
+            ['Bold', 'Italic', 'Underline', 'RemoveFormat', 'Blockquote'],
+            # 字体颜色
+            ['TextColor', 'BGColor'],
+            #格式、字体、大小
+            ['Format','Font','FontSize'],
+            # 链接
+            ['Link', 'Unlink'],
+            # 列表
+            ['Image', 'NumberedList', 'BulletedList'],
+            #居左，居中，居右
+            ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+            # 最大化
+            ['Maximize']
+        ],
+        # 加入代码块插件
+        'extraPlugins': ','.join(['codesnippet','image2','filebrowser','widget', 'lineutils']),
+    },
+    #评论
+    'comment': {
+        # 编辑器宽度自适应
+        'width': 'auto',
+        'height': '140px',
+        # tab键转换空格数
+        'tabSpaces': 4,
+        # 工具栏风格
+        'toolbar': 'Custom',
+        # 工具栏按钮
+        'toolbar_Custom': [
+            # 表情 代码块
+            ['Smiley', 'CodeSnippet'],
+            # 字体风格
+            ['Bold', 'Italic', 'Underline', 'RemoveFormat', 'Blockquote'],
+            # 字体颜色
+            ['TextColor', 'BGColor'],
+            # 链接
+            ['Link', 'Unlink'],
+            # 列表
+            ['NumberedList', 'BulletedList'],
+        ],
+        # 加入代码块插件
+        'extraPlugins': ','.join(['codesnippet']),
+    }
+}

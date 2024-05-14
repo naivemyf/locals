@@ -6,8 +6,7 @@
 
 
 {% block nav %}
-      <ul class="nav navbar-nav">
-        <li ><a href="/merchant/">首页 <span class="sr-only">(current)</span></a></li>
+      <ul class="nav navbar-nav" style="font-size: 20px;">
         <li><a href="/commdity/list/">我的商品</a></li>
           <li><a href="/commdity/add/">发布商品</a></li>
           <li><a href="/phone/list/">搜素</a></li>
@@ -40,12 +39,12 @@
         <div class="col-xs-2"><h2 class="panel-title">您好，商家{{request.session.info.name}}</h2></div><label>现在是{% now "Y-m-d " %}</label>
       </div>
       <div class="panel-body" style="margin-left: 20%;">
-            <div style="margin-top: 40px;"></div>
+            <div style="margin-top: 40px;" ></div>
           {% if data %}
-              <label style="font-size: 20px;">您的商品情况：</label>
+              <label style="font-size: 25px;">您的商品情况：</label>
               <div style="margin-top: 25px;"></div>
-              <div style="margin-left: 15%;font-size: 15px;">
-                  <div><td>总商品数量：{{ data.comm_counts  }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/commdity/list/">查看</a></td></div>
+              <div style="margin-left: 15%;font-size: 20px;">
+                  <div><td>总商品数量：{{ data.comm_counts  }}</td><td>&nbsp;&nbsp;<a href="/commdity/list/">查看</a></td></div>
                   <div style="margin-top: 20px;"></div>
                   <div><td >未审核商品数量为：{{ data.unad_comm }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/commlistno/">查看</a></td></div>
                   <div style="margin-top: 20px;"></div>
@@ -56,6 +55,27 @@
        <div style="margin-top: 40px;"></div>
       </div>
     </div>
+
+<div class="panel panel-info" style="margin-top: 10px;">
+            <div style="margin-left: 50px;margin-top: 30px;font-size: 18px;">
+                <label>我的消息</label>
+                    <div style="margin-top: 20px;">
+                        {% if comm %}
+                {% for i in comm %}
+                        <div class="list-item">
+                            {{ forloop.counter }}、您于{{ i.createtime|date:'Y-m-d H:i:s' }}发布的文章<a href="/article/{{ i.id}}/edit/">{{ i.title }}</a>审核不通过！
+                        </div>
+                        <h4 style="margin-left: 25px;">审核意见为：{{ i.mes }}</h4>
+                        <h4 style="margin-left: 25px;">请你根据审核意见进行修改，感谢您的配合！！！</h4>
+                        <div style="margin-left: 600px;"><p style="color: grey;font-size: 16px;">{{ i.time }}</p></div>
+                {% endfor %}
+                <div style="margin-top: 20px;"></div>
+                {% else %}
+                <h4>暂无消息</h4>
+                {% endif %}
+                    </div>
+            </div>
+        </div>
 
 </div>
     </div>

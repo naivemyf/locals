@@ -5,6 +5,7 @@ from app import models
 from app.utils.form import ArticleAdd,ArticleEdit
 from app.utils.pagination import Pagination
 from app.utils.sensitivewords import SensitiveFilter
+import ahocorasick
 # 文章添加
 def articleadd(req):
     """文章添加"""
@@ -36,7 +37,7 @@ def list(req):
     page_obj = Pagination(req, obj)
     context = {
         "title": title,
-        "list": page_obj.page_queryset,
+        "obj": page_obj.page_queryset,
         "page_string": page_obj.html()
     }
     return render(req, "article/art_list.html", context)
@@ -83,6 +84,7 @@ def art_detail(req,nid):
 # 文章编辑
 def art_edit(req,nid):
     title = "文章编辑"
+    res = None
     obj = models.Article.objects.filter(id=nid).first()
     if req.method == "GET":
         form = ArticleEdit(instance=obj)
@@ -90,11 +92,18 @@ def art_edit(req,nid):
     form = ArticleEdit(data=req.POST, instance=obj)
     if form.is_valid():
         form.instance.status = 0
+        form.instance.status = 1
+        stra = form.cleaned_data['content']
         tag = str(form.cleaned_data["select_tag"])
+
         if tag == 'None':
             form.save()
             return redirect('/article/listme/')
         form.instance.tag =tag
+        Filter = SensitiveFilter()
+        res = Filter.replaceSensitive(txt=stra)
+        if res:
+            return render(req, "article/article.html", {'form': form, "title": title, "res": res})
         form.save()
         return redirect('/article/listme/')
     return render(req, "article/article.html", {'form': form, "title":title})

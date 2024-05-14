@@ -1,0 +1,153 @@
+{% extends "admin/admin.html" %}
+{% load static %}
+{% block title %}
+    <title>分析页面</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading"></div>
+                <div class="panel-body " style="margin-left:50px;display: inline-block;vertical-align: top;width:45%;height:500px;"><div>文章类别</div>
+                    <div id="m1" style="width:80%;height:500px;">
+
+                    </div>
+                </div>
+                <div class="panel-body " style="display: inline-block;vertical-align: top;width:45%;height:500px;"><div>特色商品类别</div>
+                    <div id="m2" style="width:80%;height:500px;">
+
+                    </div>
+                </div>
+    </div>
+</div>
+
+    <script>
+
+            function initPie1(){
+{#饼图js#}
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('m1'));
+        var option = {
+                tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            top: '5%',
+            left: 'center'
+          },
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: ['40%', '70%'],
+              avoidLabelOverlap: false,
+              itemStyle: {
+                borderRadius: 10,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+              label: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: 40,
+                  fontWeight: 'bold'
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+              ]
+            }
+          ]
+            };
+
+{#饼图ajax#}
+    $.ajax({
+        url:"/admin/art/chartpie/",
+            type:"get",
+            dataType:"JSON",
+            success: function(res){
+                if(res.status){
+                    option.series[0].data =res.data;
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                }
+            }
+    })
+    }
+
+    function initPie2(){
+{#饼图js#}
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('m2'));
+        var option = {
+                tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            top: '5%',
+            left: 'center'
+          },
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: ['40%', '70%'],
+              avoidLabelOverlap: false,
+              itemStyle: {
+                borderRadius: 10,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+              label: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: 40,
+                  fontWeight: 'bold'
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+              ]
+            }
+          ]
+            };
+
+{#饼图ajax#}
+    $.ajax({
+        url:"/admin/comm/chartpie/",
+            type:"get",
+            dataType:"JSON",
+            success: function(res){
+                if(res.status){
+                    option.series[0].data =res.data;
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                }
+            }
+    })
+    }
+        </script>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/echarts.js' %}"></script>
+    <script type="text/javascript">
+        $(function(){
+            initPie1();
+            initPie2();
+        })
+    </script>
+
+{% endblock %}

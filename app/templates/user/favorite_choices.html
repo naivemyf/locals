@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>特产兴趣选择</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+
+            padding: 10px;
+            width: 800px;
+            height: 650px;
+        }
+        .grid-item {
+            border: none ;
+            font-size: 15px;
+            text-align: center;
+            width: 200px;
+            height: 150px;
+        }
+         .grid-item img {
+            width: 200px; /* 设置图片宽度 */
+            height: 150px; /* 设置图片高度 */
+        }
+         .grid-item.selected {
+    border: 10px solid #337ab7; /* 设置边框样式为蓝色实线 */
+}
+    </style>
+
+
+</head>
+<body>
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+
+<div class="container" style="margin-left:300px; margin-top: 50px;">
+    <h1 >您好！欢迎您注册本系统！</h1>
+    <h3>请选择感兴趣的特产分类：</h3>
+    <a class="btn btn-default " href="/index/"  role="button" style="margin-left: 1150px;border-radius:50px;width: 70px; height: 40px;">跳过</a>
+    <div class="grid-container" style="margin-left: 200px;margin-top: 20px;" >
+
+        {% for i in form %}
+    <div class="grid-item" ><img src="{{ i.pic.url }}" alt="{{ i.name }}">{{ i.name }}</div>
+        {% endfor %}
+</div>
+
+<button type="submit" class="btn btn-default btn-lg active"  style="margin-left: 550px;font-size: 20px;" onclick="submitSelection()">提交</button>
+</div>
+<script type="text/javascript" src="{% static "js/jquery-3.6.0.js" %}"></script>
+<script>
+// 获取所有的图片元素
+const imageElements = document.querySelectorAll('.grid-item img');
+// 为每个图片元素添加点击事件监听器
+imageElements.forEach(img => {
+  img.addEventListener('click', () => {
+    // 切换图片的选中状态
+    if (img.parentElement.classList.contains('selected')) {
+        img.parentElement.classList.remove('selected');
+        {#img.parentElement.dataset.love = '0'; // 取消选中时，将喜爱值设置为0#}
+    } else {
+        img.parentElement.classList.add('selected');
+        {#img.parentElement.dataset.love = '20'; // 选中时，将喜爱值设置为20%#}
+    }
+  });
+});
+
+
+function submitSelection() {
+    // 创建一个空的对象，用于存储用户的喜爱值
+    let loveDict = [];
+    // 获取所有的图片元素
+    const imageElements = document.querySelectorAll('.grid-item img');
+    // 遍历所有图片元素，检查是否被选中
+    imageElements.forEach(img => {
+        if (img.parentElement.classList.contains('selected')) {
+            // 如果图片被选中，将其名称添加到对象中
+            loveDict.push(img.alt)
+        }
+    });
+    console.log(loveDict);
+    Values(loveDict);
+}
+function Values(loveDict){
+    $.ajax({
+        type:'POST',
+        url:'/chocies/fav/',
+        data:{"filelist":loveDict},
+        dataType:'JSON',
+        traditional:true,
+        success: function (res) {
+            if(res.status){
+                window.location.href = "/login/";
+            }
+            else{
+                alert(res.mes)
+            }
+        }
+    })
+}
+
+</script>
+</body>
+</html>

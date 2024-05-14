@@ -8,19 +8,18 @@
 {% block login %}
 {#      判断是否已经登录#}
     <li class="dropdown" id="loginnav">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+    <a style="font-size: 20px;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
        aria-haspopup="true" aria-expanded="false" id="name"></a>
     <ul class="dropdown-menu" id="navnav">
 {% endblock %}
 
 {% block nav %}
       <ul class="nav navbar-nav" style="margin-top: 25px;">
-        <li ><a href="/index/">首页 <span class="sr-only">(current)</span></a></li>
-        <li><a href="/article/list/">文章列表</a></li>
-          <li><a href="/commdity/listall/">商品列表</a></li>
-          <li><a href="/article/add/">发布文章</a></li>
-          <li><a href="/search/list/">搜素</a></li>
-
+        <li ><a style="font-size: 20px;" href="/index/">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a style="font-size: 20px;" href="/article/list/">文章列表</a></li>
+          <li><a style="font-size: 20px;" href="/commdity/listall/">商品列表</a></li>
+          <li><a style="font-size: 20px;" href="/user/mess/list/">公告</a></li>
+          <li><a style="font-size: 20px;" href="/search/list/">搜素</a></li>
       </ul>
 {% endblock %}
 
@@ -92,6 +91,29 @@
             width: 200px; /* 设置图片宽度 */
             height: 150px; /* 设置图片高度 */
         }
+            *{margin:0px; padding:0px; }
+            #NavTop{
+                    width:400px;
+                    height:200px;
+                    margin-top:430px;
+                    position:fixed;
+                right:0px;top:150px;        /*固定位置,右浮动，距上150px*/
+            }
+            #NavTop #NavCon{
+                            width:400px;
+                            height:200px;
+                            position:relative;
+            }
+            #NavTop #NavCon img.banner{
+                                        position:absolute;
+                                        left:40px;
+                                        top:-40px;
+            }
+
+            #NavTop #NavCon img.bottom{
+                                        margin-top:15px;
+            }
+
 
     </style>
 {% endblock %}
@@ -100,6 +122,15 @@
 
 
 {% block content %}
+    <div id="NavTop" style="font-size: 20px;">
+                 <div id="NavCon">
+                     <a href="/merchant/login/"><img src="{% static 'img/index/sj.jpg' %}"
+                                 style="width: 300px;height: 150px;"></a>
+                    <div style="height: 10px;"></div>
+                     <a href="/admin/login/" ><img  src="{% static 'img/index/gly.jpg' %}"
+                                 style="width: 300px;height: 150px;"></a>
+                 </div>
+             </div>
 
     <!--banner-->
     <div class="banner">
@@ -151,12 +182,12 @@
             <div class="bs-example" data-example-id="simple-responsive-table">
     <div class="table-responsive">
 
-      <table class="table">
+      <table class="table" style="font-size: 18px;">
         <tbody>
         {% if rec_list.art %}
               {% for i in rec_list.art %}
           <tr>
-            <th scope="row"><a href="/article/{{ i.id }}/detail/">{{ i.title }}</a></th>
+            <th scope="row"><a style="font-size: 18px;" href="/article/{{ i.id }}/detail/">{{ i.title }}</a></th>
             <td>{{ i.timestamp|date:'Y-m-d H:i:s'}}</td>
             <td>{{ i.username }}</td>
             <td>{{ i.tag }}</td>
@@ -179,16 +210,18 @@
                 <div style="clear:both;"></div>
             </ul>
         </div>
-        <div class="grid-container"  >
-            {% if rec_list.comm %}
+        <div class="grid-container" style="font-size: 20px;" >
+            {% if rec_list.comm == "暂无商品" %}
+                <p>暂无特色商品</p>
+                {% else %}
             {% for i in rec_list.comm %}
             <div class="grid-item" >
                 {% if i.pic %}
-                <img src="{{ i.pic.url }}">
+                <a href="/commdity/{{ i.id }}/detail/"><img src="{{ i.pic.url }}"></a>
                 {% else %}
                 <img src="{% static 'img/web/defalut.jpg' %}">
                 {% endif %}
-                <a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
+                <a href="/commdity/{{ i.id }}/detail/" style="font-size: 20px;">{{ i.commdityname }}</a>
                 <p>{{ i.createtime|date:'Y-m-d H:i:s' }}</p></div>
             {% endfor %}
             {% endif %}

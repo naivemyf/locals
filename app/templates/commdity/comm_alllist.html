@@ -1,0 +1,101 @@
+{% extends "article/art_list.html" %}
+{% load static %}
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block css %}
+<style>
+
+        .grid-container {
+            display: grid;
+            grid-template-columns:   auto auto auto;
+            padding: 10px;
+
+        }
+        .grid-item {
+            border: none ;
+            font-size: 18px;
+            text-align: center;
+            width: 300px;
+            height: 150px;
+            margin-top: 60px;
+        }
+         .grid-item img {
+            width: 300px; /* 设置图片宽度 */
+            height: 150px; /* 设置图片高度 */
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+ <div class="container">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
+                {{ title }}
+            </div>
+           <div class="grid-container"  >
+            {% if rec_list.comm == "暂无商品" %}
+                <p>暂无特色商品</p>
+                {% else %}
+            {% for i in list %}
+            <div class="grid-item" >
+                {% if i.pic %}
+                <a href="/commdity/{{ i.id }}/detail/"><img src="{{ i.pic.url }}"></a>
+                {% else %}
+                <img src="{% static 'img/web/defalut.jpg' %}">
+                {% endif %}
+                <a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
+                <p>{{ i.createtime|date:'Y-m-d H:i:s' }}</p></div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+        <div style="height: 50px;"></div>
+        </div>
+  <ul class ="pagination">
+        {{page_string}}
+    </ul>
+
+    </div>
+
+{% endblock %}
+
+{% block jsartlist %}
+    <script type="text/javascript">
+    $(function(){
+        BindDelete();
+        BindConDelete();
+    })
+    //警告框订单删除（通过按钮获取数据id）
+    function BindDelete(){
+        $(".btn-delete").click(function(){
+            //获取删除按钮的uid
+            Delete_id = $(this).attr("uid");
+        })
+    }
+    //订单确定删除
+    function BindConDelete(){
+        $("#btnConDelete").click(function (){
+            $.ajax({
+                url:"/commdity/delete/",
+                type:"GET",
+                data:{
+                    uid:Delete_id
+                },
+                datatype:"JSON",
+                success:function(res){
+                    if(res.status){
+                        alert("删除成功");
+                        location.reload();//刷新页面
+                    }else {
+                        alert(res.error);
+                    }
+                }
+            })
+        })
+    }
+    </script>
+{% endblock %}

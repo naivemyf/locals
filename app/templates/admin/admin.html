@@ -4,10 +4,12 @@
     <title>管理员页面</title>
 {% endblock %}
 
+{% block css %}
 
+{% endblock %}
 
 {% block nav %}
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" style="font-size: 25px;margin-top: 10px;">
          <li><a href="#" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >审核<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/admin/melistno/">审核商家</a></li>
@@ -19,9 +21,11 @@
 {#              <li><a href="#">用户权限</a></li>#}
 {#              <li><a href="#">商家权限</a></li>#}
 {#          </ul></li>#}
-          <li><a href="/phone/list/">发布公告</a></li>
+          <li><a href="/admin/mess/add/">发布公告</a></li>
+          <li><a href="/admin/mess/list/">公告列表</a></li>
+          <li><a href="/analysis/art/">特色数据</a></li>
           <li><a href="/phone/list/">搜素</a></li>
-          <li><a href="#">Link</a></li>
+{#          <li><a href="#">Link</a></li>#}
       </ul>
     <ul class="nav navbar-nav navbar-right">
     <li class="dropdown " >
@@ -49,31 +53,112 @@
       <div class="panel-heading">
         <div class="col-xs-2"><h2 class="panel-title">您好，管理员{{request.session.info.name}}</h2></div><label>现在是{% now "Y-m-d " %}</label>
       </div>
-      <div class="panel-body" style="margin-left: 20%;">
-            <div style="margin-top: 40px;"></div>
-          {% if data %}
-              <label style="font-size: 20px;">您需要完成的审核：</label>
-              <div style="margin-top: 25px;"></div>
-              <div style="margin-left: 15%;font-size: 15px;">
-                  <div><td>未审核文章数量为：{{ data.art_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/artlistno/">查看</a></td></div>
-                  <div style="margin-top: 20px;"></div>
-                  <div><td >未审核商品数量为：{{ data.comm_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/commlistno/">查看</a></td></div>
-                  <div style="margin-top: 20px;"></div>
-                  <div><td>未审核商家数量为：{{ data.me_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/melistno/">查看</a></td></div></div>
-          {% else %}
-              <label>目前暂无审核任务</label>
-          {% endif %}
-       <div style="margin-top: 40px;"></div>
+      <div class="panel-body"  >
+          <div style="float: left;width: 40%;margin-left:5%;">
+              <div style=" margin-top: 100px;"></div>
+              {% if data %}
+                  <label style="font-size: 25px;">您需要完成的审核：</label>
+                  <div style="margin-top: 25px;"></div>
+                  <div style="margin-left: 5%;font-size: 20px;">
+                      <div><td>未审核文章数量为：{{ data.art_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/artlistno/">查看</a></td></div>
+                      <div style="margin-top: 20px;"></div>
+                      <div><td >未审核商品数量为：{{ data.comm_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/commlistno/">查看</a></td></div>
+                      <div style="margin-top: 20px;"></div>
+                      <div><td>未审核商家数量为：{{ data.me_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/melistno/">查看</a></td></div></div>
+              {% else %}
+                  <label>目前暂无审核任务</label>
+              {% endif %}
+           <div style="margin-top: 40px;width: 60%;"></div>
+          </div>
+          <div style="margin-left:45%">
+
+
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <div id="m3" style="width:100%;height:400px;">
+
+                    </div>
+                </div>
+
+
+          </div>
       </div>
     </div>
 
 </div>
-        {% endblock %}
+
+        <script>
+            function initPie(){
+{#饼图js#}
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('m3'));
+        var option = {
+                tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            top: '5%',
+            left: 'center'
+          },
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: ['40%', '70%'],
+              avoidLabelOverlap: false,
+              itemStyle: {
+                borderRadius: 10,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+              label: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: 40,
+                  fontWeight: 'bold'
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              data: [
+              ]
+            }
+          ]
+            };
+
+{#饼图ajax#}
+    $.ajax({
+        url:"/admin/chart/pie/",
+            type:"get",
+            dataType:"JSON",
+            success: function(res){
+                if(res.status){
+                    option.series[0].data =res.data;
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                }
+            }
+    })
+    }
+        </script>
+    {% endblock %}
 </div>
 {% endblock %}
 
 
 {% block js %}
+    <script src="{% static 'js/echarts.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function(){
+            initPie();
+        })
+    </script>
     {% block jsad %}
     {% endblock%}
 {% endblock %}

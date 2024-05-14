@@ -40,8 +40,10 @@ urlpatterns = [
     path("user/fav/",account.favindex),   # 用户收藏
     path("user/favcomm/",account.favindexcomm),   # 用户收藏
     path("user/<int:nid>/info/",account.myinfo),  # 用户信息
-    path("user/myinfo/detail/",account.detail_myinfo),  # 用户信息详情
+    # path("user/myinfo/detail/",account.detail_myinfo),  # 用户信息详情
     path("user/myinfo/edit/",account.edit_myinfo),  # 用户信息编辑
+    path("user/pd/edit/",account.edit_pd),  # 用户密码修改
+    path("user/mess/list/",account.mess_list),  # 公告列表
 
     # 注册
     path("register/", account.register),  # 注册
@@ -54,28 +56,44 @@ urlpatterns = [
 
     # 登录
     path("login/", account.login),  # 登录
+    path("admin/login/",admin.login),  # 管理员登录
+    path("merchant/login/", merchant.login),  # 管理员登录
     path("logout/", account.logout),  # 注销
     path("image/code/", account.image_code),  # 验证码
 
     # 管理员
     path("admin/", admin.adminindex),  # 管理员首页
+    path("admin/fav/", account.favindex),  # 管理员收藏
+    path("admin/favcomm/", account.favindexcomm),  # 管理员收藏
+    # （文章）
     path("admin/artlist/",admin.ad_art_list),  # 已审核文章列表
     path("admin/artlistno/",admin.ad_art_list_no),  # 管理员未审核文章列表
+    path("admin/artlistno/admin/article/<int:nid>/view/", admin.art_detail),  # 文章详情
+    path("admin/art/status/", admin.art_status),  # 文章审核
+    path("admin/art/batch-audit/", admin.art_batch),  # 文章批量审核
+    path("admin/art/nostatus/", admin.art_nostatus),  # 未通过审核文章
+    # （商家）
     path("admin/melist/",admin.ad_me_list),  # 已审核商家
     path("admin/melistno/",admin.ad_me_listno),  # 未审核商家
+    path("admin/me/status/", admin.me_status),  # 商家审核
+    # （商品）
     path("admin/commlist/",admin.ad_comm_list),  # 已审核商品
-    path("admin/commlistno/",admin.ad_comm_listno),  # 已审核商品
-    path("admin/artlistno/admin/article/<int:nid>/view/",admin.art_detail),  # 文章详情
+    path("admin/commlistno/",admin.ad_comm_listno),  # 未审核商品
     path("admin/com/<int:nid>/view/",admin.comm_detail),  # 商品详情
     path("admin/comm/status/",admin.comm_status),   # 商品审核
-    path("admin/comm/batch-audit/", admin.comm_batch),  # 文章批量审核
-    path("admin/art/status/",admin.art_status),  # 文章审核
-    path("admin/art/batch-audit/",admin.art_batch),  # 文章批量审核
-    path("admin/art/nostatus/",admin.art_nostatus),  # 未通过审核
-    path("admin/me/status/",admin.me_status),  # 商家审核
-    path("admin/fav/",account.favindex),  # 管理员收藏
-    path("admin/favcomm/",account.favindexcomm),  # 管理员收藏
-
+    path("admin/comm/batch-audit/", admin.comm_batch),  # 商品批量审核
+    path("admin/comm/nostatus/", admin.comm_nostatus),  # 未通过审核商品
+    # (公告)
+    path("admin/mess/add/",admin.mess_add),  # 公告添加
+    path("admin/mess/list/",admin.mess_list),  # 公告列表
+    path('admin/mess/<int:nid>/detail/',admin.mess_detail),  # 公告详情
+    path("admin/mess/<int:nid>/edit",admin.mess_edit),  # 公告编辑
+    path("admin/mess/delete/",admin.mess_del),  # 公告删除
+    # (饼图)
+    path("admin/chart/pie/",admin.chart_pie),
+    path("analysis/art/",admin.analyse_index),
+    path("admin/art/chartpie/",admin.art_chartpie),
+    path("admin/comm/chartpie/",admin.comm_chartpie),
     # 商家
     path("merchant/", merchant.merchantindex),  # 商家首页
     path("merchant/fav/", account.favindex),  # 商家收藏

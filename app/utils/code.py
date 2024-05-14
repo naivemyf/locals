@@ -33,11 +33,11 @@ def check_code(width=120, height=30, char_length=5, font_file='kumo.ttf', font_s
         draw.text([i * width / char_length, h], char, font=font, fill=rndColor())
 
     # 写干扰点
-    for i in range(30):
+    for i in range(10):
         draw.point([random.randint(0, width), random.randint(0, height)], fill=rndColor())
 
     # 写干扰圆圈
-    for i in range(40):
+    for i in range(10):
         draw.point([random.randint(0, width), random.randint(0, height)], fill=rndColor())
         x = random.randint(0, width)
         y = random.randint(0, height)

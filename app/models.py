@@ -1,8 +1,7 @@
-from django.db import models
-
 # Create your models here.
 
 from django.db import models
+from ckeditor.fields import RichTextField
 
 # 数据库创建
 # Create your models here.
@@ -168,3 +167,22 @@ class Recommend(models.Model):
         blank=True,
         null=True,
     )
+
+# class Merchant(models.Model):
+#     company_name = models.CharField(max_length=255, verbose_name='公司名称')
+#     company_type = models.CharField(max_length=255, verbose_name='公司类型')
+#     representative_name = models.CharField(max_length=255, verbose_name='法定代表人姓名')
+#     id_number = models.CharField(max_length=18, verbose_name='法人身份证号码')
+#     id_expiration_date = models.DateField(verbose_name='法人身份证有效期')
+#     contact_phone = models.CharField(max_length=20, verbose_name='联系电话')
+#     actual_office_address = models.CharField(max_length=255, verbose_name='实际办公地址')
+#
+#     def __str__(self):
+#         return self.company_name
+
+
+class Message(models.Model):
+    title = models.CharField(max_length=255, verbose_name='标题')
+    content = RichTextField(verbose_name='内容',config_name='default')
+    time = models.DateTimeField(auto_now_add=True, verbose_name='时间')
+    name = models.CharField(max_length=255, verbose_name='发送者')

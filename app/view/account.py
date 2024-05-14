@@ -1,13 +1,16 @@
 import json
+
 from io import BytesIO
 from django.shortcuts import render, HttpResponse, redirect
 from app import models
 from app.utils.code import check_code
-from app.utils.form import RegisterForm, LoginForm
-from django.contrib import auth
+from app.utils.form import RegisterForm, LoginForm, Adminreset
 from app.utils.bootsrap import BootsrapForm,BootsrapModel
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from app.utils.pagination import Pagination
+
+
 #注册
 def register(req):
     """注册"""
@@ -16,20 +19,18 @@ def register(req):
         return render(req, 'user/register.html', {'form': form})
     form = RegisterForm(data=req.POST)
     if form.is_valid():
-        rid = form.cleaned_data.get("role").id
-        if rid == 1:
-            req.session["account"] = form.cleaned_data.get("username")
-            form.save()
-            return redirect("/chocies/fav/")
-        elif rid == 2:
-            form.instance.process = 0
-            form.save()
-            return HttpResponse('<p style="text-align:center;font-size: 60px">注册成功，请等待管理员审核<p>')
-        elif rid == 3:
-            return HttpResponse('<p style="text-align:center;font-size: 60px">管理员无需注册<p>')
+        req.session["account"] = form.cleaned_data.get("username")
+        form.instance.role_id = 1
+        form.save()
+        return redirect("/chocies/fav/")
     return render(req, 'user/register.html', {'form': form})
 
-
+ # elif rid == 2:
+        #     form.instance.process = 0
+        #     form.save()
+        #     return HttpResponse('<p style="text-align:center;font-size: 60px">注册成功，请等待管理员审核<p>')
+        # elif rid == 3:
+        #     return HttpResponse('<p style="text-align:center;font-size: 60px">管理员无需注册<p>')
 
 
 # 登录
@@ -77,8 +78,6 @@ def login(req):
             return HttpResponse('<p style="text-align:center;font-size: 60px">注册成功，请等待管理员审核<p>')
         elif rid == 2 and admin_object.process == 1:#已审核商家
             return redirect("/merchant/")
-        elif rid == 3:#管理员
-            return redirect("/admin/")
     return render(req, 'user/login.html', {'form': form})
 
 # 生成验证码
@@ -104,14 +103,14 @@ def logout(req):
 # 收藏列表
 def favindex(req):
     title = "我的文章收藏"
-    message = "您还没有收藏任何文章"
+
 
     uname = req.session["info"]["name"]  # 获取用户名
     # art_ids = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).values_list('art_id',flat=True)
     # # 搜素用户名和文章id不为空的数据，并取出满足两个条件的文章id用列表（一维表）的形式储存
     existsts = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).exists()
     if not existsts:
-        return render(req,'user/list_favorite.html', {'title': title, 'message': message})
+        return render(req,'user/list_favorite.html', {'title': title})
     u_list =models.Enshrine.objects.filter(username=uname,status=1)  # 查找用户储存的收藏信息
     article_list = []   # 列表
     for i in u_list:
@@ -136,13 +135,13 @@ def favindex(req):
 #  我的商品收藏
 def favindexcomm(req):
     title = "我的商品收藏"
-    message = "您还没有收藏任何商品"
+
     uname = req.session["info"]["name"]  # 获取用户名
     # art_ids = models.Enshrine.objects.filter(username=uname, art_id__isnull=False).values_list('art_id',flat=True)
     # # 搜素用户名和文章id不为空的数据，并取出满足两个条件的文章id用列表（一维表）的形式储存
     exists =models.Enshrine.objects.filter(username=uname, comm_id__isnull=False).exists()
     if not exists:
-        return render(req, 'user/list_favorite.html', {'title': title, 'message': message})
+        return render(req, 'user/list_favorite.html', {'title': title})
     u_list = models.Enshrine.objects.filter(username=uname,status=1)
     comm_list = []
     for i in u_list:
@@ -166,12 +165,14 @@ def favindexcomm(req):
 class Myinfo(BootsrapModel):
     class Meta:
         model = models.User
-        exclude=['subadmin','process','role_id']
+        fields=["username","phonenumber"]
 #  我的信息
 def myinfo(req,nid):
     if req.method == "GET":
-        form = models.User.objects.filter(id=nid).first()
+        obj = models.User.objects.filter(id=nid).first()
         name = req.session["info"]["name"]
+        form = Myinfo(instance=obj)
+        pd = Adminreset()
         art = models.Article.objects.filter(username=name,status=1).all()
         art_list = []
         for i in art:
@@ -184,24 +185,13 @@ def myinfo(req,nid):
                     "createtime":i.timestamp,
                 }
                 art_list.append(art_dict)
-        return render(req, 'user/user_mess.html', {'obj': form,"art":art_list})
+        return render(req, 'user/user_mess.html', {'obj': obj,"art":art_list,"form":form,"pd":pd})
     # return render(req,'user/user_mess.html',{'form':form})
 
-def detail_myinfo(req):
-    uid = req.GET.get("uid")
-    obj = models.User.objects.filter(id=uid).first()
-    obj_dict = models.User.objects.filter(id=uid).values("username", "password", "phonenumber").first()
-    if not obj:
-        return JsonResponse({
-            "status": False,
-            "error": "修改失败，数据不存在",
-        })
-        # JsonResponse返回状态Flase和错误
-    return JsonResponse({"status": True, "data": obj_dict})
 
 @csrf_exempt
 def edit_myinfo(req):
-    if req.method == "GET":
+    if req.method == "POST":
         uid = req.GET.get("uid")
         obj = models.User.objects.filter(id=uid).first()
         if not obj:
@@ -218,3 +208,36 @@ def edit_myinfo(req):
             return HttpResponse(json.dumps(data_dict))
         data_dict = {"status": False, 'error': forms.errors}
         return HttpResponse(json.dumps(data_dict, ensure_ascii=False))  # 返回状态Flase和错误
+
+
+
+@csrf_exempt
+def edit_pd(req):
+
+    if req.method == "POST":
+        uid = req.GET.get("uid")
+        obj = models.User.objects.filter(id=uid).first()
+        if not obj:
+            return JsonResponse({
+                "status": False,
+                "tips": "修改失败，数据不存在",
+            })
+            # JsonResponse返回状态Flase和错误
+        forms = Adminreset(data=req.POST, instance=obj)
+        if forms.is_valid():
+            forms.save()
+            data_dict = {"status": True}
+            return HttpResponse(json.dumps(data_dict))
+        data_dict = {"status": False, 'error': forms.errors}
+        return HttpResponse(json.dumps(data_dict, ensure_ascii=False))
+#
+def mess_list(req):
+    title = "公告列表"
+    list = models.Message.objects.all()
+    page_obj = Pagination(req, list)
+    context = {
+        "title": title,
+        "list": page_obj.page_queryset,
+        "page_string": page_obj.html(),
+    }
+    return render(req,"user/mess_list.html",context)

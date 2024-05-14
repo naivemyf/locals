@@ -1,0 +1,102 @@
+{% extends "admin/admin.html" %}
+
+{% block content %}
+
+ <div class="container">
+        <div class="clearfix">
+            <a class="btn btn-primary" href="/admin/melistno/" style="margin-bottom: 10px" >
+                未审核商家
+            </a>
+            <a class="btn btn-primary" href="/admin/melist/" style="margin-bottom: 10px">
+                所有商家
+            </a>
+        </div>
+        <div class="panel panel-default" >
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
+                {{title}}
+            </div>
+            <table class="table table-bordered" id="tab" >
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>商家名称</th>
+                    <th>电话号码</th>
+                    <th>申请时间</th>
+                    <th>审核状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody >
+                {% for i in me_list %}
+                    <tr>
+                        <th>{{ forloop.counter }}</th>
+                        <td>{{ i.username}}</td>
+                        <td>{{ i.phonenumber }}</td>
+                        <td>{{ i.createtime }}</td>
+                        <td>{{ i.get_process_display }}</td>
+                        <td>
+                            {% if i.process == 0 %}
+                                <input uid="{{ i.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="编辑" data-toggle="modal" data-target="#EditModal">
+                            {% endif %}
+                        </td>
+{#                        {% autoescape off %}#}
+{#                        <td>{{ obj.content }}</td>#}
+{#                        {% endautoescape %}#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+     <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <h4>是否通过审核！！！</h4>
+      <p style="margin:10px 0">通过审核后，商家即可登录系统！</p>
+      <p style="text-align: right">
+        <button id="btnConDelete" type="button" class="btn btn-danger" >确定</button>
+        <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
+      </p>
+    </div>
+    </div>
+</div>
+{% endblock %}
+{% block jsad %}
+ <script type="text/javascript">
+    var id ;
+    $(function(){
+        Command();
+        Status();
+    })
+
+    function Command(){
+        $(".btn-delete").click(function(){
+            id = $(this).attr("uid");
+        })
+    }
+
+    function Status(){
+        $("#btnConDelete").click(function (){
+            $.ajax({
+                url:"/admin/me/status/",
+                type:"GET",
+                data:{
+                    uid:id
+                },
+                datatype:"JSON",
+                success:function(res){
+                    if(res.status){
+                        alert("审核成功");
+                        location.reload();//刷新页面
+                    }else {
+                        alert(res.error);
+                    }
+                }
+            })
+            })
+        }
+    </script>
+{% endblock %}

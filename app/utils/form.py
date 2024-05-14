@@ -33,7 +33,7 @@ class RegisterForm(BootsrapModel):
 
     class Meta:
         model =models.User
-        fields = ["username", "phonenumber", "password", "fpassword", "role"]
+        fields = ["username", "phonenumber", "password", "fpassword"]
         widgets = {
             "password": forms.PasswordInput(render_value=True)
         }
@@ -95,9 +95,39 @@ class ArticleEdit(BootsrapModel):
                                         required=False)
     class Meta:
         model = models.Article
-        exclude = ["username", "status", "collect"]
+        exclude = ["username", "status", "collect","message","timemes"]
         widgets = {
             'tag': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
 
+#重置密码类
+class Adminreset(BootsrapModel):
+    conform_pd = forms.CharField(
+        label="确认密码",
+        widget=forms.PasswordInput(render_value=True)
+    )
 
+    """重置密码"""
+
+    class Meta:
+        model = models.User
+        fields = ["password"]
+        widgets = {
+            "password": forms.PasswordInput(render_value=True)
+        }
+
+    def clean_password(self):
+        pwd = self.cleaned_data.get("password")
+        md5_pd = md5(pwd)
+        # 数据库验证密码是否与以前密码一致
+        exists = models.User.objects.filter(id=self.instance.pk, password=md5_pd).exists()
+        if exists:
+            raise ValidationError("密码不能与之前一致")
+        return md5_pd
+
+    def clean_conform_pd(self):
+        pwd = self.cleaned_data.get("password")
+        conform = self.cleaned_data.get("conform_pd")
+        if pwd != md5(conform):
+            raise ValidationError("密码不一致，请重新输入")
+        return conform  # 返回conform到clean_confrom_pd,并且保存到数据库

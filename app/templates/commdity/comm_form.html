@@ -10,7 +10,7 @@
 {#        <h1>{{ book.title }}</h1>#}
 {#  <img src="{{ book.book_image.url }}" alt="{{ book.title }} Cover">#}
 {#    </div>#}
-    <div class="panel-body" style="flex: 1;" >
+    <div class="panel-body" style="flex: 1;font-size: 20px;" >
         <form method="post" novalidate style="margin: auto;width:500px;"  id="CommdityList"  enctype="multipart/form-data">
 {#            enctype='multipart/form-data'#}
             {% csrf_token %}
@@ -19,7 +19,7 @@
             <label >{{i.label }}</label>
             <div style="height: 10px;"></div>
             {{i}}
-            {% if title == '商品添加' %}
+            {% if title == '特色产品添加' %}
             <span id="error" style="color: red;position:absolute;">{{ i.errors.0 }}</span>
             {% endif %}
 {#            <span style="color: red"></span>#}

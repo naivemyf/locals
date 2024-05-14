@@ -18,7 +18,7 @@ class CommdityBootstrp(BootsrapModel):
 
     class Meta:
         model = models.Commdity  # 指定model数据库
-        exclude = ["status", "username", "tag"]  # 排除不显示字段
+        exclude = ["status", "username", "tag","timemes","message"]  # 排除不显示字段
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,25 +29,19 @@ class CommdityBootstrp(BootsrapModel):
 
 @csrf_exempt
 def commdityadd(req):
-    title = "特产添加"
+    title = "特色产品添加"
     if req.method == 'GET':
         form = CommdityBootstrp()
         return render(req, "commdity/comm_form.html",
                       {"form": form, "title": title})
     form = CommdityBootstrp(data=req.POST)
     pic = req.FILES.get('pic')
-    # req.session["pic"] = {
-    #     'pic': pic
-    # }
     if form.is_valid():
         form.instance.pic = pic
         form.instance.username = req.session["info"]["name"]
-        form.instance.tag = req.cleaned_data["tag"]
+        form.instance.tag = form.cleaned_data["tag"]
         form.save()
         return redirect("/commdity/list/")
-    # data_dict = {"status": False, 'error': form.errors}
-    # return HttpResponse(json.dumps(data_dict, ensure_ascii=False))  #
-    # 返回状态Flase和错误
     return render(req, "commdity/comm_form.html",
                   {"form": form, "title": title})
 # 商品所有字段类
@@ -164,3 +158,4 @@ def comm_fav_del(req, id):
     if id_status == 0:
         return JsonResponse({"status": True})
     return JsonResponse({"status": False})
+

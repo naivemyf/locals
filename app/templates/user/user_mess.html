@@ -1,0 +1,198 @@
+{% extends "user/index.html" %}
+{% load static %}
+{% block title %}
+    <title>用户信息</title>
+{% endblock %}
+{% block css %}
+    <style>
+    h3 {
+        margin-bottom: 10px; /* 设置h3元素之间的间距 */
+    }
+    .list-item {
+        display: inline;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        {% if request.session.info.role_id == 1 or request.session.info.role_id == 3 %}
+{#            我的信息#}
+        <div class="panel panel-info"  style="margin-top: 100px;">
+            <div class="bs-example" data-example-id="hoverable-table"
+                 style="margin-left: 300px;margin-top: 100px;font-size: 18px;width: 300px;">
+                <table class="table table-hover">
+                  <tbody>
+                  <tr><th >昵称:</th><td>{{ obj.username }}</td></tr>
+                  <tr><th>密码:</th><td>******</td></tr>
+                  <tr><th>电话号码:</th><td>{{ obj.phonenumber }}</td></tr>
+                  <tr><th>注册时间:</th><td>{{ obj.createtime }}</td></tr>
+                  </tbody>
+                </table>
+                <div style="display: inline-block"><input uid="{{ obj.id }}"  type="button" class="btn btn-primary btn-xs btn-edit" value="修改" data-toggle="modal" data-target="#myModal"></div>
+                <div style="display: inline-block"><input uid="{{ obj.id }}"  type="button" class="btn btn-primary btn-xs btn-edit" value="修改密码" data-toggle="modal" data-target="#pdModal"></div>
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+{#            我的消息#}
+        <div class="panel panel-info" style="margin-top: 10px;">
+            <div style="margin-left: 50px;margin-top: 30px;font-size: 18px;">
+                <label>我的消息</label>
+                    <div style="margin-top: 20px;">
+                        {% if art %}
+                {% for i in art %}
+                        <div class="list-item">
+                            {{ forloop.counter }}、您于{{ i.createtime|date:'Y-m-d H:i:s' }}发布的文章<a href="/article/{{ i.id}}/edit/">{{ i.title }}</a>审核不通过！
+                        </div>
+                        <h4 style="margin-left: 25px;">审核意见为：{{ i.mes }}</h4>
+                        <h4 style="margin-left: 25px;">请你根据审核意见进行修改，感谢您的配合！！！</h4>
+                        <div style="margin-left: 600px;"><p style="color: grey;font-size: 16px;">{{ i.time }}</p></div>
+                {% endfor %}
+                <div style="margin-top: 20px;"></div>
+                {% else %}
+                <h4>暂无</h4>
+                {% endif %}
+                    </div>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+<!-- 个人信息 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改个人信息</h4>
+      </div>
+      <div class="modal-body">
+        <form id="myList"  novalidate>
+{#        novalidate关闭浏览器检验#}
+                    <div class="clearfix">
+                        {% for i in form %}
+                        <div class="col-xs-12">
+{#                        栅格col-xs-12#}
+                        <div class="form-group" style="position:relative;">
+                            <label> {{ i.label }}:</label>
+                            {{ i }}
+                            <span id="error" style="color: red;position:absolute;"></span>
+                        </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                <br>
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="confirm" >更改</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#    密码修改#}
+<div class="modal fade" id="pdModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+      </div>
+      <div class="modal-body">
+        <form id="pdList"  novalidate>
+{#        novalidate关闭浏览器检验#}
+                    <div class="clearfix">
+                        <div class="col-xs-12">
+{#                        栅格col-xs-12#}
+                            {% for i in pd %}
+                        <div class="form-group" style="position:relative;">
+                            <label> {{ i.label }}</label>
+                            {{ i }}
+                            <span id="error" style="color: red;position:absolute;"></span>
+                        </div>
+                       {% endfor %}
+                        </div>
+
+                    </div>
+                <br>
+                </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="conpd" >更改</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+    confirm_myinfo();
+    conpd();
+})
+var id =  {{ obj.id }} ;
+
+function confirm_myinfo(){
+    $("#confirm").click(function (){
+        $.ajax({
+                    url:"/user/myinfo/edit/"+"?uid="+id,
+                    type:"post",
+                    data:$("#myList").serialize(),
+                    dataType:"JSON",
+                    success:function(res){
+                        if(res.status){
+                            alert("修改成功")
+                            //清空表单
+                            $("#myList")[0].reset();
+                            //关闭对话框
+                            $('#myModal').modal('hide');
+                            //页面刷新(清空表单)
+                            window.location.reload();
+                        }else {
+                            if(res.tips){
+                                alert(res.tips);
+                            }else {
+                                $.each(res.error,function(name,data){
+                                    $("#id_"+name).next().text(data[0]);
+                                })
+                            }
+                        }
+                    }
+                })
+    })
+}
+
+function conpd(){
+    $("#conpd").click(function (){
+        $.ajax({
+                    url:"/user/pd/edit/"+"?uid="+id,
+                    type:"post",
+                    data:$("#pdList").serialize(),
+                    dataType:"JSON",
+                    success:function(res){
+                        if(res.status){
+                            alert("修改成功")
+                            //清空表单
+                            $("#pdList")[0].reset();
+                            //关闭对话框
+                            $('#pdModal').modal('hide');
+                            //页面刷新(清空表单)
+                            window.location.reload();
+                        }else {
+                            if(res.tips){
+                                alert(res.tips);
+                            }else {
+                                $.each(res.error,function(name,data){
+                                    $("#id_"+name).next().text(data[0]);
+                                })
+                            }
+                        }
+                    }
+                })
+    })
+}
+</script>
+{% endblock %}
