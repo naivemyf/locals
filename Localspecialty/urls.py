@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.view import account, index, article, merchant, admin, commdity, localspec,test
+from app.view import account, index, article, merchant, admin, commdity, localspec,test,find
 from app.utils import uploadImage
 from django.conf import settings
 from django.conf.urls.static import static
@@ -26,7 +26,7 @@ urlpatterns = [
 
 
     #测试
-
+    path("find/",find.find),
     path("img/add/",test.add),  # 图片上传ceshi
     # # list模板
     # path("list/",list.list),
@@ -75,6 +75,7 @@ urlpatterns = [
     # （商家）
     path("admin/melist/",admin.ad_me_list),  # 已审核商家
     path("admin/melistno/",admin.ad_me_listno),  # 未审核商家
+    path("admin/me/<int:nid>/view/", admin.me_detail),  # 文章详情
     path("admin/me/status/", admin.me_status),  # 商家审核
     # （商品）
     path("admin/commlist/",admin.ad_comm_list),  # 已审核商品
@@ -96,6 +97,7 @@ urlpatterns = [
     path("admin/comm/chartpie/",admin.comm_chartpie),
     # 商家
     path("merchant/", merchant.merchantindex),  # 商家首页
+    path("merchant/register/", merchant.register),  # 注册
     path("merchant/fav/", account.favindex),  # 商家收藏
     path("merchant/favcomm/", account.favindexcomm),  # 商家收藏
 

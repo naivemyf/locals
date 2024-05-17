@@ -250,12 +250,20 @@ def art_nostatus(req):
             })
         models.Article.objects.filter(id=uid).update(message=res,timemes=timemes)
         return JsonResponse({'status': True})
-
+#商家详情
+def me_detail(req,nid):
+    title = "商家信息"
+    obj= models.User.objects.filter(id=nid).first()
+    if not obj:
+        messages.error(req,"商家不存在！")
+    name = obj.username
+    form = models.Merchant.objects.filter(representative_name=name).first()
+    return render(req,"user/list_content.html",{"form":form,"title":title})
 
 #  审核商家
 def me_status(req):
     uid = req.GET.get("uid")
-    obj = models.User.objects.filter(id=uid).first()
+    obj = models.User.objects.filter(id=uid).all()
     if not obj:
         return JsonResponse({
             "status": False,
@@ -263,6 +271,7 @@ def me_status(req):
         })  # JsonResponse返回状态Flase和错误
     models.User.objects.filter(id=uid).update(process=1)
     return JsonResponse({"status": True})
+
 
 from ckeditor.fields import RichTextFormField
 #  添加公告类

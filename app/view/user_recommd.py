@@ -91,28 +91,13 @@ def recommend(target_user, new_dicta):
             recommed_list[key] += value
         else:
             recommed_list[key] = value
-    count = models.Enshrine.objects.filter(username=target_user).count()
-    if count > 5:
-        res = most_list(target_user)
-        res_list = res[0]
+
         # 将result转换为列表
-        recommed_list = [(k, v) for k, v in recommed_list.items()]
-        # 两个列表相加
-        result_dict = {}
-        for item in res_list:
-            result_dict[item[0]] = item[1]
-        for item in recommed_list:
-            if item[0] in result_dict:
-                result_dict[item[0]] += item[1]
-            else:
-                result_dict[item[0]] = item[1]
-        result_list = [(k, v) for k, v in result_dict.items()]
+    result_list = [(k, v) for k, v in recommed_list.items()]
+
         # 根据推荐列表里的打分请款从小到大排序，然后反转
-        tuple = (result_list[:10], top_people)
-    else:
-        # 将result转换为列表
-        recommed_list = [(k, v) for k, v in recommed_list.items()]
-        tuple = (recommed_list[:10], top_people)
+    tuple = (result_list[:10],top_people)
+
     # 取出top10推荐
     return tuple
 
@@ -182,7 +167,7 @@ def most_list(name):
     counter = Counter(tag)
     res = list(counter.items())
     new_res = [item for item in res if item[0] is not None]
-    most_list = (new_res, res)
+    most_list = (new_res, 0)
     return most_list
 
 # 随机推荐文章和商品

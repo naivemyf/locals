@@ -144,7 +144,6 @@ class Enshrine(models.Model):
     status = models.SmallIntegerField(
         verbose_name="状态", choices=status_choice, default=1)
 
-
 class Choice(models.Model):
     """选择兴趣表"""
     name = models.CharField(verbose_name='特产分类名称', max_length=16)
@@ -157,7 +156,6 @@ class Choice(models.Model):
     def __str__(self):
         return self.name
 
-
 class Recommend(models.Model):
 
     user = models.CharField(verbose_name='用户名', max_length=16)
@@ -168,17 +166,26 @@ class Recommend(models.Model):
         null=True,
     )
 
-# class Merchant(models.Model):
-#     company_name = models.CharField(max_length=255, verbose_name='公司名称')
-#     company_type = models.CharField(max_length=255, verbose_name='公司类型')
-#     representative_name = models.CharField(max_length=255, verbose_name='法定代表人姓名')
-#     id_number = models.CharField(max_length=18, verbose_name='法人身份证号码')
-#     id_expiration_date = models.DateField(verbose_name='法人身份证有效期')
-#     contact_phone = models.CharField(max_length=20, verbose_name='联系电话')
-#     actual_office_address = models.CharField(max_length=255, verbose_name='实际办公地址')
-#
-#     def __str__(self):
-#         return self.company_name
+class Merchant(models.Model):
+    company_name = models.CharField(max_length=255, verbose_name='公司名称')
+    company_chice = (
+        (0, "有限责任公司 "),
+        (1, "股份有限公司" ),
+        (2, "无限公司"),
+        (3, "两合公司"),
+        (4, "股份两合公司"),
+    )
+    company_type = models.SmallIntegerField(verbose_name='公司类型',choices =company_chice)
+
+    representative_name = models.CharField(max_length=255, verbose_name='法定代表人姓名')
+    id_number = models.CharField(max_length=18, verbose_name='法人身份证号码')
+    id_expiration_date = models.DateField(verbose_name='法人身份证有效期')
+    contact_phone = models.CharField(max_length=20, verbose_name='联系电话')
+    actual_office_address = models.CharField(max_length=255, verbose_name='实际办公地址')
+    password = models.CharField(max_length=255, verbose_name='密码')
+
+    def __str__(self):
+        return self.company_name
 
 
 class Message(models.Model):

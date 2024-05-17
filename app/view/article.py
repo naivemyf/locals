@@ -79,7 +79,10 @@ def art_detail(req,nid):
             exists = False
     if not obj:
         return redirect("article/listme")
-    return render(req,"user/list_content.html", {"obj": obj,"title":title,"exists":exists,"rid":rid})
+    if obj.tag:
+        tag_id = models.Choice.objects.filter(name=obj.tag).values_list("id", flat=True).get()
+        return render(req,"user/list_content.html", {"obj": obj,"title":title,"exists":exists,"rid":rid,"tid":tag_id})
+    return render(req, "user/list_content.html", {"obj": obj, "title": title, "exists": exists, "rid": rid})
 
 # 文章编辑
 def art_edit(req,nid):

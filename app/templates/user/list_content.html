@@ -98,10 +98,10 @@
                     <div>
                     <p style="font-size: 20px;color:grey">本文涉及特产为:
                     {% if obj.commdity %}<a href="/commdity/{{ obj.commdity_id }}/detail/">#{{ obj.commdity }}</a>
-                        <br><br><span>特产类别#{{ obj.tag }}</span>
+                        <br><br><span>特产类别#<a href="/tag/{{ tid }}/">{{ obj.tag }}</a></span>
                     {% else %}
                     暂无<br><br>
-                    <span>文章类别#{{ obj.tag }}</span>
+                    <span>文章类别#<a href="/tag/{{ tid }}/">{{ obj.tag }}</a></span>
                     {% endif %}
                     </p>
                     </div>
@@ -124,6 +124,37 @@
     </div>
 
 {% elif title == "商家信息" %}
+    <div class="container">
+    <div class="panel panel-default" style="margin-top: 100px;">
+        <div class="panel-heading"><p style="font-size: 20px;">请审核{{ form.representative_name }}商家信息</p></div>
+        <div style="font-size: 18px;display: grid;grid-template-columns: 1fr 1fr;gap: 20px;">
+                <div class="form-group" style="margin-top: 20px;margin-left: 25px;">
+                    <label>商家名称</label>
+                    <p>{{ form.company_name }}</p></div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>商家类型</label>
+                        <p>{{ form.get_company_type_display }}</p></div>
+                    <div class="form-group" style="margin-left: 25px;">
+                        <label>法人</label>
+                        <p>{{ form.representative_name }}</p></div>
+                    <div class="form-group">
+                        <label>法人身份证号码</label>
+                        <p>{{ form.id_number }}</p></div>
+                    <div class="form-group" style="margin-left: 25px;">
+                        <label>法人身份证有效期</label>
+                    <p>{{ form.id_expiration_date  }}</p></div>
+                        <div class="form-group">
+                        <label>法人联系电话</label>
+                    <p>{{ form.contact_phone }}</p></div>
+                            <div class="form-group" style="margin-left: 25px;">
+                        <label>商家实际办公地址</label>
+                    <p>{{ form.actual_office_address  }}</p></div>
+            </div>
+                </div>
+        </div>
+    </div>
+    </div>
+
 
 {% elif title == "公告详情" %}
 

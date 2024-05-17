@@ -32,11 +32,12 @@
                 {% for i in me_list %}
                     <tr>
                         <th>{{ forloop.counter }}</th>
-                        <td>{{ i.username}}</td>
+                        <td><a href="/admin/me/{{ i.id }}/view/">{{ i.username}}</a></td>
                         <td>{{ i.phonenumber }}</td>
                         <td>{{ i.createtime }}</td>
                         <td>{{ i.get_process_display }}</td>
                         <td>
+                            <a href="/admin/me/{{ i.id }}/view/" type="button" class="btn btn-primary btn-xs btn-delete">查看</a>
                             {% if i.process == 0 %}
                                 <input uid="{{ i.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="编辑" data-toggle="modal" data-target="#EditModal">
                             {% endif %}

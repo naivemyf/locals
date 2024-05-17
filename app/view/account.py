@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from app.utils.pagination import Pagination
 
 
+
 #注册
 def register(req):
     """注册"""

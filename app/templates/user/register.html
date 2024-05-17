@@ -27,7 +27,6 @@
 <body style="background-image: url('{% static 'img/blackground/1713692163059.png' %}');background-size: cover; background-repeat: no-repeat; background-position: center center; ">
 <div class="account" style="background-color: rgba(255,255,255, 0.5);margin-top: 200px;">
     <h2>注册</h2><br/>
-<h5 style="text-align: center">商家<span>|</span>用户皆可注册</h5>
     <form method="post" novalidate>
         {% csrf_token %}
         {%  for i in form %}
