@@ -3,6 +3,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 
+from ckeditor_uploader.fields import RichTextUploadingField
 # 数据库创建
 # Create your models here.
 
@@ -190,6 +191,6 @@ class Merchant(models.Model):
 
 class Message(models.Model):
     title = models.CharField(max_length=255, verbose_name='标题')
-    content = RichTextField(verbose_name='内容',config_name='default')
+    content = models.TextField(verbose_name='内容')
     time = models.DateTimeField(auto_now_add=True, verbose_name='时间')
     name = models.CharField(max_length=255, verbose_name='发送者')

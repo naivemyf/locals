@@ -1,59 +1,60 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理员登录 — 红河州特产平台</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
-     <style>
-        .account {
-            width: 400px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            box-shadow: 5px 5px 20px #aaa;
-
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 100px;
-            padding: 20px 40px;
-        }
-
-        .account h2 {
-            margin-top: 10px;
-            text-align: center;
+    <link rel="stylesheet" href="{% static 'css/modern.css' %}">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(108,92,231,0.1) 0%, rgba(0,0,0,0.02) 100%),
+                        url('{% static "img/blackground/gly1.jpg" %}') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
-<body style="background-image: url('{% static 'img/blackground/gly1.jpg' %}');background-size: cover; background-repeat: no-repeat; background-position: center center; ">
-<div class="account" style="background-color: rgba(255,255,255, 0.5);margin-top: 250px;">
-    <h2>管理员登录</h2>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        <div class="form-group" >
-            <label>账号</label>
-            {{ form.phonenumber }}
-            <span style="color: red">{{ form.phonenumber.errors.0 }}</span>
-        </div>
-        <div class="form-group">
-            <label>密码</label>
-            {{ form.password }}
-            <span style="color: red">{{ form.password.errors.0 }}</span>
-        </div>
-        <div class="form-group">
-            <label for="id_code">图片验证码</label>
-            <div class="row">
-                <div class="col-xs-7">
-                    {{form.code}}
-                    <span style="color: red;">{{ form.code.errors.0 }}</span>
-                </div>
-                <div class="col-xs-5">
-                    <img id="image_code" src="/image/code/" style="width: 125px;">
+<body>
+<div class="auth-page">
+    <div class="auth-card">
+        <h2>⚙ 管理员登录</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>📱 账号（手机号）</label>
+                {{ form.phonenumber }}
+                <span style="color:#e74c3c;font-size:13px;">{{ form.phonenumber.errors.0 }}</span>
+            </div>
+
+            <div class="form-group">
+                <label>🔒 密码</label>
+                {{ form.password }}
+                <span style="color:#e74c3c;font-size:13px;">{{ form.password.errors.0 }}</span>
+            </div>
+
+            <div class="form-group">
+                <label>🖼 图片验证码</label>
+                <div class="row">
+                    <div class="col-xs-7" style="padding-right:8px;">
+                        {{ form.code }}
+                        <span style="color:#e74c3c;font-size:13px;">{{ form.code.errors.0 }}</span>
+                    </div>
+                    <div class="col-xs-5" style="padding-left:0;">
+                        <img id="image_code" src="/image/code/" style="border-radius:6px;height:44px;"
+                             onclick="this.src='/image/code/?'+new Date().getTime()"
+                             title="点击刷新验证码">
+                    </div>
                 </div>
             </div>
-        </div>
-        <input type="submit" value="登 录" class="btn btn-primary">
-    </form>
-</div>
 
+            <button type="submit" class="btn btn-primary" style="margin-top:10px;">登 录</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

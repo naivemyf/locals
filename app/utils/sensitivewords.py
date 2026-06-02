@@ -1,33 +1,37 @@
 import os
 import chardet
-import re
 import ahocorasick
+
+
 class SensitiveFilter:
-    def merge_txt_files(self):
+    _actree = None
+
+    @classmethod
+    def _get_actree(cls):
+        """构建敏感词AC自动机（只构建一次，缓存复用）"""
+        if cls._actree is not None:
+            return cls._actree
+
+        folder_path = os.path.join(os.path.dirname(__file__), "Sensitive")
         merged_list = []
-        folder_path = "C:\\Users\\Myf20\\PycharmProjects\\Localspecialty\\app\\utils\\Sensitive"
         for file in os.listdir(folder_path):
             if file.endswith(".txt"):
-                with open(os.path.join(folder_path, file), "rb") as f:
+                file_path = os.path.join(folder_path, file)
+                with open(file_path, "rb") as f:
                     content = f.read()
-                    encoding = chardet.detect(content)['encoding']
+                    encoding = chardet.detect(content)["encoding"]
                     decoded_content = content.decode(encoding)
                     merged_list.extend(decoded_content.splitlines())
-        return merged_list
 
-    def build_actree(self,wordlist):
         actree = ahocorasick.Automaton()
-        for index,word in enumerate(wordlist):
-            actree.add_word(word,(index,word))
+        for index, word in enumerate(merged_list):
+            actree.add_word(word, (index, word))
         actree.make_automaton()
-        return actree
-    # 构建敏感词库
-    def replaceSensitive(self, txt):
-        merged_list = self.merge_txt_files()
-        actree = self.build_actree(wordlist=merged_list)
-        sent_cp = txt
-        for i in actree.iter(txt):
-            sent_cp = sent_cp.replace(i[1][1], "**")
-        count = txt.count("*")
-        return count
+        cls._actree = actree
+        return cls._actree
 
+    def replaceSensitive(self, txt):
+        """检测文本中的敏感词，返回匹配到的敏感词数量"""
+        actree = self._get_actree()
+        matches = list(actree.iter(txt))
+        return len(matches)

@@ -1,11 +1,10 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from app.utils.bootsrap import BootsrapModel, BootsrapForm
 from app import models
-from app.utils.form import ArticleAdd,ArticleEdit
+from app.utils.form import ArticleAdd, ArticleEdit
 from app.utils.pagination import Pagination
 from app.utils.sensitivewords import SensitiveFilter
-import ahocorasick
+
 # 文章添加
 def articleadd(req):
     """文章添加"""
@@ -94,7 +93,6 @@ def art_edit(req,nid):
         return render(req, "article/article.html", {'form': form, "title":title})
     form = ArticleEdit(data=req.POST, instance=obj)
     if form.is_valid():
-        form.instance.status = 0
         form.instance.status = 1
         stra = form.cleaned_data['content']
         tag = str(form.cleaned_data["select_tag"])

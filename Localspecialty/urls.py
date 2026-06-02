@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from app.view import account, index, article, merchant, admin, commdity, localspec,test,find
 from app.utils import uploadImage
+from django.urls import path,include,re_path
+
+from django.views.static import serve
+from .settings import MEDIA_ROOT
 from django.conf import settings
 from django.conf.urls.static import static
 # 新增页面，想要让未注册游客进入需要修改状态的中间件
@@ -87,6 +91,8 @@ urlpatterns = [
     # (公告)
     path("admin/mess/add/",admin.mess_add),  # 公告添加
     path("admin/mess/list/",admin.mess_list),  # 公告列表
+    path("uploadimage/",
+         uploadImage.UploadImage.as_view(), name="upload_img"),  # 图片上传
     path('admin/mess/<int:nid>/detail/',admin.mess_detail),  # 公告详情
     path("admin/mess/<int:nid>/edit",admin.mess_edit),  # 公告编辑
     path("admin/mess/delete/",admin.mess_del),  # 公告删除

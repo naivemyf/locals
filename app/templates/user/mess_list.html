@@ -1,33 +1,22 @@
 {% extends "article/art_list.html" %}
+
 {% block content %}
-    <div class="container">
-
-    <div class="bs-example" data-example-id="condensed-table">
-    <table class="table ">
-      <thead>
-        <tr>
-          <th>序号</th>
-          <th>标题</th>
-          <th>时间</th>
-          <th>发布人</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for i in list %}
-        <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td><a href="/admin/mess/{{ i.id }}/detail/">{{ i.title }}</a></td>
-
-          <td>{{ i.time|date:"Y-m-d H:i:s"   }}</td>
-          <td>{{ i.name }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-     <ul class ="pagination">
-        {{page_string}}
-    </ul>
+<div class="container" style="margin-top:25px;">
+    <div class="panel">
+        <div class="panel-heading">📢 公告列表</div>
+        <div class="panel-body" style="padding:0;">
+            {% for i in list %}
+            <div class="mess-item">
+                <div class="mess-title">
+                    <a href="/admin/mess/{{ i.id }}/detail/" style="color:#2d3436;">{{ i.title }}</a>
+                </div>
+                <div class="mess-meta">📅 {{ i.time|date:"Y-m-d H:i" }} &nbsp;|&nbsp; ✍ {{ i.name }}</div>
+            </div>
+            {% empty %}
+            <p style="text-align:center;color:#b2bec3;padding:40px 0;">📭 暂无公告</p>
+            {% endfor %}
+        </div>
     </div>
-
+    <ul class="pagination">{{ page_string }}</ul>
+</div>
 {% endblock %}

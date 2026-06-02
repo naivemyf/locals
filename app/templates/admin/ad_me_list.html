@@ -1,103 +1,93 @@
 {% extends "admin/admin.html" %}
 
 {% block content %}
+<div class="container" style="margin-top:25px;">
+    <div class="clearfix" style="margin-bottom:15px;">
+        <a class="btn btn-primary" href="/admin/melistno/">📋 未审核商家</a>
+        <a class="btn btn-default" href="/admin/melist/" style="margin-left:8px;">🏪 所有商家</a>
+    </div>
 
- <div class="container">
-        <div class="clearfix">
-            <a class="btn btn-primary" href="/admin/melistno/" style="margin-bottom: 10px" >
-                未审核商家
-            </a>
-            <a class="btn btn-primary" href="/admin/melist/" style="margin-bottom: 10px">
-                所有商家
-            </a>
-        </div>
-        <div class="panel panel-default" >
-            <!-- Default panel contents -->
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
-                {{title}}
-            </div>
-            <table class="table table-bordered" id="tab" >
+    <div class="panel">
+        <div class="panel-heading">{{ title }}</div>
+        <div class="panel-body" style="padding:0;">
+            <table class="table table-bordered" id="tab">
                 <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>商家名称</th>
-                    <th>电话号码</th>
-                    <th>申请时间</th>
-                    <th>审核状态</th>
-                    <th>操作</th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>商家名称</th>
+                        <th>电话号码</th>
+                        <th>申请时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
                 </thead>
-                <tbody >
+                <tbody>
                 {% for i in me_list %}
                     <tr>
-                        <th>{{ forloop.counter }}</th>
-                        <td><a href="/admin/me/{{ i.id }}/view/">{{ i.username}}</a></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/admin/me/{{ i.id }}/view/" style="font-weight:600;">{{ i.username }}</a></td>
                         <td>{{ i.phonenumber }}</td>
-                        <td>{{ i.createtime }}</td>
-                        <td>{{ i.get_process_display }}</td>
+                        <td>{{ i.createtime|date:'Y-m-d' }}</td>
                         <td>
-                            <a href="/admin/me/{{ i.id }}/view/" type="button" class="btn btn-primary btn-xs btn-delete">查看</a>
-                            {% if i.process == 0 %}
-                                <input uid="{{ i.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="编辑" data-toggle="modal" data-target="#EditModal">
+                            {% if i.get_process_display == '待审核' %}
+                            <span style="color:#f39c12;font-weight:600;">待审核</span>
+                            {% elif i.get_process_display == '审核通过' %}
+                            <span style="color:#27ae60;font-weight:600;">审核通过</span>
+                            {% else %}
+                            {{ i.get_process_display }}
                             {% endif %}
                         </td>
-{#                        {% autoescape off %}#}
-{#                        <td>{{ obj.content }}</td>#}
-{#                        {% endautoescape %}#}
+                        <td>
+                            <a href="/admin/me/{{ i.id }}/view/" class="btn btn-primary btn-xs">查看</a>
+                            {% if i.process == 0 %}
+                            <button uid="{{ i.id }}" class="btn btn-danger btn-xs btn-delete"
+                                    data-toggle="modal" data-target="#EditModal">审核</button>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-     <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>
+
+{# 审核弹窗 #}
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-    <div class="alert alert-danger alert-dismissible fade in" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <h4>是否通过审核！！！</h4>
-      <p style="margin:10px 0">通过审核后，商家即可登录系统！</p>
-      <p style="text-align: right">
-        <button id="btnConDelete" type="button" class="btn btn-danger" >确定</button>
-        <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
-      </p>
-    </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">🏪 商家审核</h4>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:16px;">是否通过该商家的审核？</p>
+                <p style="color:#b2bec3;font-size:14px;">通过后商家即可登录系统发布商品</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnConDelete" class="btn btn-primary">✅ 通过</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
+
 {% block jsad %}
- <script type="text/javascript">
-    var id ;
-    $(function(){
-        Command();
-        Status();
-    })
-
-    function Command(){
-        $(".btn-delete").click(function(){
-            id = $(this).attr("uid");
-        })
-    }
-
-    function Status(){
-        $("#btnConDelete").click(function (){
-            $.ajax({
-                url:"/admin/me/status/",
-                type:"GET",
-                data:{
-                    uid:id
-                },
-                datatype:"JSON",
-                success:function(res){
-                    if(res.status){
-                        alert("审核成功");
-                        location.reload();//刷新页面
-                    }else {
-                        alert(res.error);
-                    }
-                }
-            })
-            })
-        }
-    </script>
+<script>
+var id;
+$(function(){ Command(); Status(); });
+function Command(){ $(".btn-delete").click(function(){ id = $(this).attr("uid"); }); }
+function Status(){
+    $("#btnConDelete").click(function(){
+        $.ajax({
+            url:"/admin/me/status/", type:"GET", data:{uid:id}, dataType:"JSON",
+            success:function(res){
+                if(res.status){ alert("审核成功"); location.reload(); }
+                else { alert(res.error); }
+            }
+        });
+    });
+}
+</script>
 {% endblock %}

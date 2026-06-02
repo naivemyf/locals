@@ -1,99 +1,104 @@
 {% extends "user/index.html" %}
 {% load static %}
+
 {% block title %}
-<title>{{ title }}</title>
+    <title>{{ title }}</title>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="clearfix">
-            </div>
-        {% if title == "我的文章收藏" %}
-    {% if art %}
-        <div class="bs-example" data-example-id="hoverable-table">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>标题</th>
-          <th>收藏时间</th>
-          <th>文章作者</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in art %}
-        <tr>
-          <th scope="row">{{ a.art.id }}</th>
-          <td><a href="/article/{{ a.art.id }}/detail/">{{ a.art.title }}</a></td>
-          <td>{{ a.time  }}</td>
-          <td>{{ a.art.username }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-        {% else %}
-        <p>暂无收藏,请先浏览</p>
-    {% endif %}
+<div class="container" style="margin-top:30px;">
+    <div class="clearfix" style="margin-bottom:15px;"></div>
 
-
-        {% elif title == "我的商品收藏" %}
-    {% if comm %}
-        <div class="bs-example" data-example-id="hoverable-table">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>商品</th>
-          <th>收藏时间</th>
-          <th>商家</th>
-            <th>商品图片</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in comm %}
-        <tr>
-          <th scope="row">{{ a.comm.id }}</th>
-          <td><a href="/commdity/{{ a.comm.id }}/detail/"> {{ a.comm.commdityname }}</a></td>
-          <td>{{ a.time }}</td>
-          <td>{{ a.comm.username }}</td>
-            {% if a.comm.pic %}
-        <td><img class="img-rounded" style="width: 200px;height: 150px;" src="{{ a.comm.pic.url}}" ></td>
+    {% if title == "我的文章收藏" %}
+    <div class="panel">
+        <div class="panel-heading">⭐ {{ title }}</div>
+        <div class="panel-body">
+            {% if art %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>收藏时间</th>
+                        <th>文章作者</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in art %}
+                    <tr>
+                        <td>{{ a.art.id }}</td>
+                        <td><a href="/article/{{ a.art.id }}/detail/" style="font-weight:600;color:#2d3436;">{{ a.art.title }}</a></td>
+                        <td>{{ a.time }}</td>
+                        <td>{{ a.art.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
-        <td>暂无图片</td>
+            <p style="text-align:center;color:#b2bec3;padding:40px 0;">📭 暂无收藏，<a href="/article/list/">去浏览文章</a></p>
             {% endif %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-        {% else %}
-        <p>暂无收藏,请先浏览</p>
-    {% endif %}
+        </div>
     </div>
 
-        {% endif %}{#title判断结尾#}
+    {% elif title == "我的商品收藏" %}
+    <div class="panel">
+        <div class="panel-heading">⭐ {{ title }}</div>
+        <div class="panel-body">
+            {% if comm %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>商品</th>
+                        <th>收藏时间</th>
+                        <th>商家</th>
+                        <th>商品图片</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in comm %}
+                    <tr>
+                        <td>{{ a.comm.id }}</td>
+                        <td><a href="/commdity/{{ a.comm.id }}/detail/" style="font-weight:600;color:#2d3436;">{{ a.comm.commdityname }}</a></td>
+                        <td>{{ a.time }}</td>
+                        <td>{{ a.comm.username }}</td>
+                        <td>
+                            {% if a.comm.pic %}
+                            <img class="img-rounded" style="width:120px;height:80px;object-fit:cover;border-radius:8px;" src="{{ a.comm.pic.url }}">
+                            {% else %}
+                            暂无图片
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align:center;color:#b2bec3;padding:40px 0;">📭 暂无收藏，<a href="/commdity/listall/">去浏览商品</a></p>
+            {% endif %}
+        </div>
+    </div>
 
-
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript">
+<script>
 $(document).ready(function(){
-    var rid ="{{ request.session.info.role_id }}";
-var a;
-if (rid == "1"){
-    a="<a href='/user/fav/' class='btn btn-primary  ' role='button'>我的收藏—文章</a>" +
-        "<a style='margin-left: 20px;' href='/user/favcomm/' class='btn btn-primary '  role='button'>我的收藏—商品</a>"
-} else if (rid == "2"){
-    a="<a href='/merchant/fav/' class='btn btn-primary  ' role='button'>我的收藏—文章</a>"+
-        "<a style='margin-left: 20px;' href='/merchant/favcomm/' class='btn btn-primary '  role='button'>我的收藏—商品</a>"
-} else  if (rid == "3"){
-    a='<a href="/admin/fav/" class="btn btn-primary  " role="button">我的收藏—文章</a>' +
-        '<a style="margin-left: 20px;" href="/admin/favcomm/" class="btn btn-primary "  role="button">我的收藏—商品</a>'
-}
-$('.clearfix').html(a);
+    var rid = "{{ request.session.info.role_id }}";
+    var a;
+    if (rid == "1") {
+        a = "<a href='/user/fav/' class='btn btn-primary'>⭐ 收藏—文章</a>" +
+            "<a style='margin-left:12px;' href='/user/favcomm/' class='btn btn-default'>🎁 收藏—商品</a>";
+    } else if (rid == "2") {
+        a = "<a href='/merchant/fav/' class='btn btn-primary'>⭐ 收藏—文章</a>" +
+            "<a style='margin-left:12px;' href='/merchant/favcomm/' class='btn btn-default'>🎁 收藏—商品</a>";
+    } else if (rid == "3") {
+        a = "<a href='/admin/fav/' class='btn btn-primary'>⭐ 收藏—文章</a>" +
+            "<a style='margin-left:12px;' href='/admin/favcomm/' class='btn btn-default'>🎁 收藏—商品</a>";
+    }
+    $('.clearfix').html(a);
 });
-
-    </script>
+</script>
 {% endblock %}

@@ -13,11 +13,15 @@ import os
 from pathlib import Path
 # from app.static import pic
 # from app import static
+import os
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = []
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -29,7 +33,7 @@ SECRET_KEY = "django-insecure-a475#0!rm@oq==xck#b5zn$0dp)npuxptp9ast$zb1zgy^l%$$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "app",
     "ckeditor",
+    "ckeditor_uploader",
 ]
 #中间件
 MIDDLEWARE = [
@@ -84,14 +89,18 @@ WSGI_APPLICATION = "Localspecialty.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 #localspe
 DATABASES = {
-    "default": {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'localspe',
-        'USER': 'root',
-        'PASSWORD': 'Zacv234@3',
-        'HOST': 'cd-cynosdbmysql-grp-a8ub8if2.sql.tencentcdb.com',
-        'PORT': '22897',
-    }#连接本地数据库MySQL
+    # "default": {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'localspe',
+    #     'USER': 'root',
+    #     'PASSWORD': 'Zacv234@3',
+    #     'HOST': 'cd-cynosdbmysql-grp-a8ub8if2.sql.tencentcdb.com',
+    #     'PORT': '22897',
+    # }#连接本地数据库MySQL
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
 }
 # 创建数据库并设置字符集
 
@@ -134,11 +143,13 @@ USE_TZ = False   #  使用时区
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "app/static/"
+# STATIC_URL already defined above as '/static/'
 
 #上传图片
 MEDIA_URL = '/pic/'
 MEDIA_ROOT = BASE_DIR / 'app/static/pic/'
+#CK
+CKEDITOR_UPLOAD_PATH = "mess/"#文件保存为止，因为上边配置了media， 图片将保存至media/uploads下
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

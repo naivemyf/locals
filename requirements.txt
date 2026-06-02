@@ -1,0 +1,9 @@
+asgiref==3.11.1
+chardet==7.4.3
+Django==6.0.5
+django-ckeditor==6.7.3
+django-js-asset==3.1.2
+pillow==12.2.0
+pyahocorasick==2.3.1
+PyMySQL==1.2.0
+sqlparse==0.5.5

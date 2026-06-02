@@ -1,200 +1,158 @@
 {% extends "admin/admin.html" %}
 
-
 {% block content %}
- <div class="container">
-        <div class="clearfix">
-            <a class="btn btn-primary" href="/admin/commlistno/" style="margin-bottom: 10px" >未审核商品</a>
-            <a class="btn btn-primary" href="/admin/commlist/" style="margin-bottom: 10px" >所有商品</a>
-            <a id="batch-audit" class="btn btn-primary" style="margin-bottom: 10px">批量审核</a>
-        </div>
-        <div class="panel panel-default" >
-            <!-- Default panel contents -->
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-th-list" aria-hidden="true" ></span>
-                {{title}}
-            </div>
-            <table class="table table-bordered" id="tab" >
-                <thead>
-                <tr>
-                    <th><input type="checkbox" id="check-all"></th>
-                    <th>序号</th>
-                    <th>商品名称</th>
-                    <th>价格</th>
-                    <th>发布时间</th>
-                    <th>商品成份</th>
-                    <th>商品地区</th>
-                    <th>商家</th>
-                    <th>审核状态</th>
-                    <th>操作</th>
+<div class="container" style="margin-top:25px;">
+    <div class="clearfix" style="margin-bottom:15px;">
+        <a class="btn btn-primary" href="/admin/commlistno/">📋 未审核商品</a>
+        <a class="btn btn-default" href="/admin/commlist/" style="margin-left:8px;">🎁 所有商品</a>
+        <a id="batch-audit" class="btn btn-default" style="margin-left:8px;">✅ 批量审核</a>
+    </div>
 
-                </tr>
+    <div class="panel">
+        <div class="panel-heading">{{ title }}</div>
+        <div class="panel-body" style="padding:0;">
+            <table class="table table-bordered" id="tab">
+                <thead>
+                    <tr>
+                        <th style="width:40px;"><input type="checkbox" id="check-all"></th>
+                        <th>#</th>
+                        <th>商品名称</th>
+                        <th>发布时间</th>
+                        <th>商品成份</th>
+                        <th>商家</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
                 </thead>
-                <tbody >
+                <tbody>
                 {% for i in comm_list %}
                     <tr>
-                        <th>
-                        {% if i.status == 0 %}
-{#                        复选框，批量审核#}
-                <input type="checkbox" class="check-item" value="{{ i.id }}">
-                        {% endif %}</th>
-                        <th>{{ forloop.counter }}</th>
-                        <td>{{ i.commdityname}}</td>
-                        <td>{{ i.price }}</td>
-                        <td>{{ i.createtime }}</td>
+                        <td>
+                            {% if i.status == 0 %}
+                            <input type="checkbox" class="check-item" value="{{ i.id }}">
+                            {% endif %}
+                        </td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ i.commdityname }}</td>
+                        <td>{{ i.createtime|date:'Y-m-d' }}</td>
                         <td>{{ i.form }}</td>
-                        <td>{{ i.area }}</td>
                         <td>{{ i.username }}</td>
-                        <td>{{ i.get_status_display  }}</td>
-
+                        <td>
+                            {% if i.get_status_display == '待审核' %}
+                            <span style="color:#f39c12;font-weight:600;">待审核</span>
+                            {% elif i.get_status_display == '审核通过' %}
+                            <span style="color:#27ae60;font-weight:600;">审核通过</span>
+                            {% else %}
+                            {{ i.get_status_display }}
+                            {% endif %}
+                        </td>
                         <td>
                             <a class="btn btn-primary btn-xs" href="/admin/com/{{ i.id }}/view/">查看</a>
                             {% if i.status == 0 %}
-{#                                <a class="btn btn-primary btn-xs"  data-toggle="modal" data-target="#EditModal" uid="{{ obj.id }}">编辑</a>#}
-                                <input uid="{{ i.id }}" type="button" class="btn btn-danger btn-xs btn-delete" value="编辑" data-toggle="modal" data-target="#EditModal">
+                            <button uid="{{ i.id }}" class="btn btn-danger btn-xs btn-delete"
+                                    data-toggle="modal" data-target="#EditModal">审核</button>
                             {% endif %}
                         </td>
-{#                        {% autoescape off %}#}
-{#                        <td>{{ obj.content }}</td>#}
-{#                        {% endautoescape %}#}
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+</div>
 
- <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+{# 审核弹窗（与文章共用相同ID以复用JS） #}
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-    <div class="alert alert-danger alert-dismissible fade in" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <h4>是否通过审核！！！</h4>
-      <p style="margin:10px 0">通过审核后，即将发布到系统！</p>
-      <p style="text-align: right">
-        <button id="btnConDelete" type="button" class="btn btn-danger" >通过</button>
-        <button type="button" class="btn btn-default " data-toggle="modal" data-target="#noModal" >不通过</button>
-      </p>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">🎁 商品审核</h4>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:16px;">是否通过该商品的审核？</p>
+                <p style="color:#b2bec3;font-size:14px;">通过后商品将发布到系统</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnConDelete" class="btn btn-primary">✅ 通过</button>
+                <button class="btn btn-default" data-toggle="modal" data-target="#noModal">❌ 不通过</button>
+            </div>
+        </div>
     </div>
-    </div>
-
- <div class="modal fade" id="noModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">不通过理由</h4>
-      </div>
-      <div class="modal-body">
-          <div class="form-group">
-    <label for="exampleInputPassword1">理由</label>
-    <input type="text" class="form-control" id="res" >
-  </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" id="nobutton">提交</button>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 
+<div class="modal fade" id="noModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">📝 不通过理由</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>审核意见</label>
+                    <input type="text" class="form-control" id="res" placeholder="请输入不通过的原因...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-danger" id="nobutton">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block jsad %}
- <script type="text/javascript">
-    var id ;
-    $(function(){
-        Command();
-        Status();
-        EditStatus();
-        CheckAll();
-        Mesg();
-    })
-
-    function Command(){
-        $(".btn-delete").click(function(){
-            id = $(this).attr("uid");
-        })
-    }
-
-    function Status(){
-        $("#btnConDelete").click(function (){
-            $.ajax({
-                url:"/admin/comm/status/",
-                type:"GET",
-                data:{
-                    uid:id
-                },
-                datatype:"JSON",
-                success:function(res){
-                    if(res.status){
-                        alert("审核成功");
-                        window.location.href = "/admin/"; //刷新页面
-                    }else {
-                        alert(res.error);
-                    }
-                }
-            })
-            })
-        }
-
-    function  EditStatus(){
-        $("#batch-audit").click(function () {
-            var ids = [];
-            $(".check-item:checked").each(function () {
-                ids.push($(this).val());
+<script>
+var id;
+$(function(){
+    Command();
+    Status();
+    EditStatus();
+    CheckAll();
+    Mesg();
+});
+function Command(){ $(".btn-delete").click(function(){ id = $(this).attr("uid"); }); }
+function Status(){
+    $("#btnConDelete").click(function(){
+        $.ajax({
+            url:"/admin/comm/status/", type:"GET", data:{uid:id}, dataType:"JSON",
+            success:function(res){
+                if(res.status){ alert("审核成功"); window.location.href = "/admin/"; }
+                else { alert(res.error); }
+            }
         });
-        if (ids.length === 0) {
-            alert("请选择需要审核的商品");
-            return;
-        }
-            $.ajax({
-                url: "/admin/comm/batch-audit/",
-                type: "POST",
-                data: {
-                    uids: ids,
-                    csrfmiddlewaretoken: "{{ csrf_token }}"
-                },
-                datatype: "JSON",
-                success: function (res) {
-                    if (res.status) {
-                        alert("批量审核成功");
-                        window.location.href = "/admin/"; //刷新页面
-                    } else {
-                        alert(res.error);
-                    }
-                }
-            });
+    });
+}
+function EditStatus(){
+    $("#batch-audit").click(function () {
+        var ids = [];
+        $(".check-item:checked").each(function () { ids.push($(this).val()); });
+        if(ids.length === 0){ alert("请选择需要审核的商品"); return; }
+        $.ajax({
+            url:"/admin/comm/batch-audit/", type:"POST",
+            data:{ uids:ids, csrfmiddlewaretoken:"{{ csrf_token }}" },
+            dataType:"JSON",
+            success:function(res){
+                if(res.status){ alert("批量审核成功"); window.location.href = "/admin/"; }
+                else { alert(res.error); }
+            }
         });
-    }
-    function CheckAll() {
-        $("#check-all").click(function () {
-            $(".check-item").prop("checked", $(this).prop("checked"));
+    });
+}
+function CheckAll(){ $("#check-all").click(function(){ $(".check-item").prop("checked", $(this).prop("checked")); }); }
+function Mesg(){
+    $("#nobutton").click(function(){
+        var res = document.getElementById("res").value;
+        $.ajax({
+            url:"/admin/comm/nostatus/", type:"GET", data:{uid:id, res:res}, dataType:"JSON",
+            success:function(res){
+                if(res.status){ alert("操作成功"); location.reload(); }
+                else { alert(res.error); }
+            }
         });
-    }
-
-    function Mesg(){
-        $("#nobutton").click(function (){
-            var res = document.getElementById("res").value;
-             $.ajax({
-                url:"/admin/comm/nostatus/",
-                type:"GET",
-                data:{
-                    uid:id,
-                    res:res,
-                },
-                datatype:"JSON",
-                success:function(res){
-                    if(res.status){
-                        alert("操作成功");
-                        location.reload();//刷新页面
-                    }else {
-                        alert(res.error);
-                    }
-                }
-            })
-        })
-    }
-    </script>
+    });
+}
+</script>
 {% endblock %}

@@ -1,164 +1,152 @@
 {% extends "user/index.html" %}
 {% load static %}
+
 {% block title %}
-    <title>管理员页面</title>
-{% endblock %}
-
-{% block css %}
-
+    <title>管理员面板</title>
 {% endblock %}
 
 {% block nav %}
-      <ul class="nav navbar-nav" style="font-size: 25px;margin-top: 10px;">
-         <li><a href="#" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >审核<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin/melistno/">审核商家</a></li>
-            <li><a href="/admin/artlistno/">审核文章</a></li>
-            <li><a href="/admin/commlistno/">审核商品</a></li>
-          </ul></li>
-{#          <li><a href="#" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" >权限修改<span class="caret"></span></a>#}
-{#          <ul class="dropdown-menu">#}
-{#              <li><a href="#">用户权限</a></li>#}
-{#              <li><a href="#">商家权限</a></li>#}
-{#          </ul></li>#}
-          <li><a href="/admin/mess/add/">发布公告</a></li>
-          <li><a href="/admin/mess/list/">公告列表</a></li>
-          <li><a href="/analysis/art/">特色数据</a></li>
-          <li><a href="/phone/list/">搜素</a></li>
-{#          <li><a href="#">Link</a></li>#}
-      </ul>
-    <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown " >
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true" id="name">{{request.session.info.name}}</a>
-    <ul class="dropdown-menu" >
-        <li><a href="/user/{{ request.session.info.id }}/info/">个人信息</a></li>
-        <li><a href="/admin/">管理页面</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="/logout/">退出</a></li></ul>
-    </li>
+    <ul class="nav navbar-nav">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                📋 审核 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/admin/melistno/">🏪 审核商家</a></li>
+                <li><a href="/admin/artlistno/">📝 审核文章</a></li>
+                <li><a href="/admin/commlistno/">🎁 审核商品</a></li>
+            </ul>
+        </li>
+        <li><a href="/admin/mess/add/">📢 发布公告</a></li>
+        <li><a href="/admin/mess/list/">📋 公告列表</a></li>
+        <li><a href="/analysis/art/">📊 数据分析</a></li>
+        <li><a href="/find/">🔍 查询</a></li>
     </ul>
 {% endblock %}
 
-
+{% block login %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+           style="font-weight:600;color:#e74c3c;">
+            ⚙ {{ request.session.info.name }}
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="/user/{{ request.session.info.id }}/info/">👤 个人信息</a></li>
+            <li><a href="/admin/">⚙ 管理面板</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/logout/">🚪 退出</a></li>
+        </ul>
+    </li>
+{% endblock %}
 
 {% block content %}
-{#    <div style="margin-left: auto;margin-right: auto; width:100%;height: 800px;#}
-{#            background: url('{% static "img/web/nav admin.jpeg" %}') no-repeat;background-size: cover;">#}
+<div class="container" style="margin-top:25px;">
     {% block contentad %}
-<div class="container" >
-<div class="panel panel-info" >
-      <img src="{% static  "img/web/nav admin.jpeg" %}" width="1140px" height="350px;">
+
+    {# 顶部大图 #}
+    <div class="panel" style="margin-bottom:20px;">
+        <img src="{% static 'img/web/nav admin.jpeg' %}" alt="管理员面板"
+             style="width:100%;max-height:300px;object-fit:cover;border-radius:12px;">
     </div>
-<div class="panel panel-info">
-      <div class="panel-heading">
-        <div class="col-xs-2"><h2 class="panel-title">您好，管理员{{request.session.info.name}}</h2></div><label>现在是{% now "Y-m-d " %}</label>
-      </div>
-      <div class="panel-body"  >
-          <div style="float: left;width: 40%;margin-left:5%;">
-              <div style=" margin-top: 100px;"></div>
-              {% if data %}
-                  <label style="font-size: 25px;">您需要完成的审核：</label>
-                  <div style="margin-top: 25px;"></div>
-                  <div style="margin-left: 5%;font-size: 20px;">
-                      <div><td>未审核文章数量为：{{ data.art_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/artlistno/">查看</a></td></div>
-                      <div style="margin-top: 20px;"></div>
-                      <div><td >未审核商品数量为：{{ data.comm_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/commlistno/">查看</a></td></div>
-                      <div style="margin-top: 20px;"></div>
-                      <div><td>未审核商家数量为：{{ data.me_counts }}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/admin/melistno/">查看</a></td></div></div>
-              {% else %}
-                  <label>目前暂无审核任务</label>
-              {% endif %}
-           <div style="margin-top: 40px;width: 60%;"></div>
-          </div>
-          <div style="margin-left:45%">
 
+    {# 统计卡片 #}
+    <div class="stat-cards">
+        <div class="stat-card" style="border-left-color:#e74c3c;">
+            <div class="number">{{ data.art_counts|default:0 }}</div>
+            <div class="label">待审核文章</div>
+            <a href="/admin/artlistno/">去审核 →</a>
+        </div>
+        <div class="stat-card" style="border-left-color:#f39c12;">
+            <div class="number">{{ data.comm_counts|default:0 }}</div>
+            <div class="label">待审核商品</div>
+            <a href="/admin/commlistno/">去审核 →</a>
+        </div>
+        <div class="stat-card" style="border-left-color:#6c5ce7;">
+            <div class="number">{{ data.me_counts|default:0 }}</div>
+            <div class="label">待审核商家</div>
+            <a href="/admin/melistno/">去审核 →</a>
+        </div>
+    </div>
 
-                <div class="panel-heading"></div>
-                <div class="panel-body">
-                    <div id="m3" style="width:100%;height:400px;">
-
+    {# 饼图 + 欢迎信息 #}
+    <div class="panel">
+        <div class="panel-heading">
+            ⚙ 您好，管理员 {{ request.session.info.name }}
+            <span style="float:right;color:#b2bec3;">📅 {% now "Y-m-d" %}</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4" style="padding:40px 25px;">
+                    <p style="font-size:22px;font-weight:700;color:#2d3436;">审核概览</p>
+                    <div id="m3" style="width:100%;height:380px;"></div>
+                </div>
+                <div class="col-md-8" style="padding:40px 25px;font-size:15px;color:#636e72;">
+                    <p style="font-weight:600;color:#2d3436;font-size:18px;">快捷操作</p>
+                    <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+                        <a href="/admin/artlistno/" class="btn btn-default" style="text-align:left;">
+                            📝 审核文章 — 当前待审 {{ data.art_counts|default:0 }} 篇
+                        </a>
+                        <a href="/admin/commlistno/" class="btn btn-default" style="text-align:left;">
+                            🎁 审核商品 — 当前待审 {{ data.comm_counts|default:0 }} 件
+                        </a>
+                        <a href="/admin/melistno/" class="btn btn-default" style="text-align:left;">
+                            🏪 审核商家 — 当前待审 {{ data.me_counts|default:0 }} 家
+                        </a>
+                        <a href="/admin/mess/add/" class="btn btn-default" style="text-align:left;">
+                            📢 发布新公告
+                        </a>
+                        <a href="/analysis/art/" class="btn btn-default" style="text-align:left;">
+                            📊 查看数据分析
+                        </a>
                     </div>
                 </div>
-
-
-          </div>
-      </div>
+            </div>
+        </div>
     </div>
-
-</div>
-
-        <script>
-            function initPie(){
-{#饼图js#}
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('m3'));
-        var option = {
-                tooltip: {
-            trigger: 'item'
-          },
-          legend: {
-            top: '5%',
-            left: 'center'
-          },
-          series: [
-            {
-              name: 'Access From',
-              type: 'pie',
-              radius: ['40%', '70%'],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
-              },
-              label: {
-                show: false,
-                position: 'center'
-              },
-              emphasis: {
-                label: {
-                  show: true,
-                  fontSize: 40,
-                  fontWeight: 'bold'
-                }
-              },
-              labelLine: {
-                show: false
-              },
-              data: [
-              ]
-            }
-          ]
-            };
-
-{#饼图ajax#}
-    $.ajax({
-        url:"/admin/chart/pie/",
-            type:"get",
-            dataType:"JSON",
-            success: function(res){
-                if(res.status){
-                    option.series[0].data =res.data;
-                    // 使用刚指定的配置项和数据显示图表。
-                    myChart.setOption(option);
-                }
-            }
-    })
-    }
-        </script>
     {% endblock %}
 </div>
 {% endblock %}
 
-
 {% block js %}
     <script src="{% static 'js/echarts.js' %}"></script>
+    <script>
+    $(function(){ initPie(); });
 
-    <script type="text/javascript">
-        $(function(){
-            initPie();
-        })
+    function initPie(){
+        var myChart = echarts.init(document.getElementById('m3'));
+        var option = {
+            tooltip: { trigger: 'item' },
+            legend: { top: '5%', left: 'center' },
+            series: [{
+                name: '审核概览',
+                type: 'pie',
+                radius: ['45%', '75%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 8,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: { show: true },
+                emphasis: {
+                    label: { show: true, fontSize: 20, fontWeight: 'bold' }
+                },
+                labelLine: { show: true },
+                data: []
+            }]
+        };
+        $.ajax({
+            url: "/admin/chart/pie/",
+            type: "GET",
+            dataType: "JSON",
+            success: function(res){
+                if(res.status){
+                    option.series[0].data = res.data;
+                    myChart.setOption(option);
+                }
+            }
+        });
+    }
     </script>
-    {% block jsad %}
-    {% endblock%}
+    {% block jsad %}{% endblock %}
 {% endblock %}

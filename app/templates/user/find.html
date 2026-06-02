@@ -1,0 +1,74 @@
+{% extends "user/index.html" %}
+
+{% block title %}
+    <title>查询</title>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top:30px;">
+    <div class="panel" style="max-width:700px;margin:0 auto;">
+        <div class="panel-heading">🔍 内容搜索</div>
+        <div class="panel-body" style="text-align:center;padding:30px;">
+            <form class="form-inline" method="get">
+                <div class="form-group" style="margin-right:8px;">
+                    <div class="input-group">
+                        <div class="input-group-addon" style="font-size:16px;background:#fef5f5;border-color:#e74c3c;color:#e74c3c;">🔍</div>
+                        <input type="text" class="form-control" name="search_text"
+                               value="{{ text|default:'' }}" placeholder="输入关键词搜索..."
+                               style="font-size:16px;width:350px;height:44px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" name="a" style="height:44px;padding:0 20px;">📝 搜文章</button>
+                <button type="submit" class="btn btn-default" name="b" style="height:44px;padding:0 20px;">🎁 搜商品</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="max-width:700px;margin:20px auto;">
+        {% if arts %}
+        <div class="section-title">
+            📝 关于「<span style="color:#e74c3c;">{{ text }}</span>」的文章
+            <span class="more-link">共 {{ arts|length }} 篇</span>
+        </div>
+        <table class="table table-hover">
+            <tbody>
+                {% for art in arts %}
+                <tr>
+                    <td><a href="/article/{{ art.id }}/detail/" style="font-weight:600;color:#2d3436;">{{ art.title }}</a></td>
+                    <td>{{ art.timestamp|date:'Y-m-d' }}</td>
+                    <td>{{ art.username }}</td>
+                    <td><span class="tag-badge">{{ art.tag }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% elif comms %}
+        <div class="section-title">
+            🎁 关于「<span style="color:#e74c3c;">{{ text }}</span>」的商品
+            <span class="more-link">共 {{ comms|length }} 件</span>
+        </div>
+        <table class="table table-hover">
+            <tbody>
+                {% for comm in comms %}
+                <tr>
+                    <td><a href="/commdity/{{ comm.id }}/detail/" style="font-weight:600;color:#2d3436;">{{ comm.commdityname }}</a></td>
+                    <td>{{ comm.createtime|date:'Y-m-d' }}</td>
+                    <td>{{ comm.username }}</td>
+                    <td><span class="tag-badge">{{ comm.tag }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% elif text %}
+        <div class="panel" style="max-width:700px;margin:20px auto;">
+            <div class="panel-body" style="text-align:center;color:#b2bec3;padding:50px;">
+                <p style="font-size:18px;">😕 没有找到与「{{ text }}」相关的内容</p>
+                <p style="margin-top:10px;">试试换个关键词？</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

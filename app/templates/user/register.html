@@ -1,46 +1,46 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户注册 — 红河州特产平台</title>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
-     <style>
-        .account {
-            width: 400px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            box-shadow: 5px 5px 20px #aaa;
-
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 100px;
-            padding: 20px 40px;
-        }
-
-        .account h2 {
-            margin-top: 10px;
-            text-align: center;
+    <link rel="stylesheet" href="{% static 'css/modern.css' %}">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(231,76,60,0.08) 0%, rgba(0,0,0,0.02) 100%),
+                        url('{% static "img/blackground/1713692163059.png" %}') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
-<body style="background-image: url('{% static 'img/blackground/1713692163059.png' %}');background-size: cover; background-repeat: no-repeat; background-position: center center; ">
-<div class="account" style="background-color: rgba(255,255,255, 0.5);margin-top: 200px;">
-    <h2>注册</h2><br/>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {%  for i in form %}
-        <div class="form-group" >
-            <label>{{ i.label }}</label>
-            {{ i }}
-            <span style="color: red">{{ i.errors.0 }}</span>
-        </div>
-        {% endfor %}
-        <input type="submit" value="注册" class="btn btn-primary">
-        <br/>暂不注册，前往<a href="/index/">首页</a>&nbsp;&nbsp;
-        <span>||</span>&nbsp;&nbsp;已有账号，直接<a href="/login/">登录</a>
-    </form>
-</div>
+<body>
+<div class="auth-page">
+    <div class="auth-card" style="width:460px;">
+        <h2>📝 用户注册</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for i in form %}
+            <div class="form-group">
+                <label>{{ i.label }}</label>
+                {{ i }}
+                <span style="color:#e74c3c;font-size:13px;">{{ i.errors.0 }}</span>
+            </div>
+            {% endfor %}
 
+            <button type="submit" class="btn btn-primary" style="margin-top:5px;">注 册</button>
+
+            <div style="text-align:center;margin-top:18px;font-size:14px;color:#636e72;">
+                已有账号？<a href="/login/" style="color:#e74c3c;font-weight:600;">直接登录</a>
+                &nbsp;|&nbsp;
+                <a href="/index/" style="color:#636e72;">先看看首页</a>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

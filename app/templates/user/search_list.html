@@ -1,0 +1,42 @@
+{% extends "user/index.html" %}
+
+{% block title %}<title>查询结果</title>{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top:30px;">
+    <div class="panel" style="max-width:700px;margin:0 auto;">
+        <div class="panel-heading">🔍 查询结果</div>
+        <div class="panel-body">
+            {% if arts %}
+                <p style="font-weight:600;">关于「<span style="color:#e74c3c;">{{ text }}</span>」的搜索结果</p>
+                <table class="table table-hover">
+                    <tbody>
+                    {% for art in arts %}
+                        <tr>
+                            <td><a href="/article/{{ art.id }}/detail/" style="font-weight:600;">{{ art.title }}</a></td>
+                            <td>{{ art.timestamp|date:'Y-m-d' }}</td>
+                            <td>{{ art.username }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% elif comms %}
+                <p style="font-weight:600;">关于「<span style="color:#e74c3c;">{{ text }}</span>」的搜索结果</p>
+                <table class="table table-hover">
+                    <tbody>
+                    {% for comm in comms %}
+                        <tr>
+                            <td><a href="/commdity/{{ comm.id }}/detail/" style="font-weight:600;">{{ comm.commdityname }}</a></td>
+                            <td>{{ comm.createtime|date:'Y-m-d' }}</td>
+                            <td>{{ comm.username }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p style="text-align:center;color:#b2bec3;padding:40px 0;">😕 没有找到相关内容</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

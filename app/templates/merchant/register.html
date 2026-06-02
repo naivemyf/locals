@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>商家注册 — 红河州特产平台</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern.css' %}">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(225,112,85,0.1) 0%, rgba(0,0,0,0.02) 100%),
+                        url('{% static "img/blackground/sj.jpg" %}') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .auth-card-wide {
+            width: 700px;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            margin: 0 auto;
+            padding: 35px 40px;
+        }
+        .auth-card-wide h2 {
+            text-align: center;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+        .auth-card-wide .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            height: 44px;
+            font-size: 15px;
+            padding: 10px 15px;
+        }
+        .auth-card-wide .form-control:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231,76,60,0.1);
+        }
+        .auth-card-wide .btn-primary {
+            width: 100%;
+            height: 46px;
+            font-size: 16px;
+            letter-spacing: 6px;
+        }
+    </style>
+
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.js' %}"></script>
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-card-wide">
+        <h2>🏪 商家注册</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 25px;">
+                {% for i in form %}
+                <div class="form-group">
+                    <label style="font-weight:500;">{{ i.label }}</label>
+                    {{ i }}
+                    <span style="color:#e74c3c;font-size:12px;">{{ i.errors.0 }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:15px;">注 册</button>
+
+            <div style="text-align:center;margin-top:18px;font-size:14px;color:#636e72;">
+                已有账号？<a href="/merchant/login/" style="color:#e74c3c;font-weight:600;">直接登录</a>
+                &nbsp;|&nbsp;
+                <a href="/index/" style="color:#636e72;">先看看首页</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js' %}"></script>
+<script>
+$(function() {
+    $('#id_id_expiration_date').datepicker({
+        format: 'yyyy-mm-dd',
+        startDate: '0',
+        language: 'zh-CN',
+        autoclose: true
+    });
+});
+</script>
+</body>
+</html>

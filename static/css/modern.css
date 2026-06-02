@@ -1,0 +1,541 @@
+@charset "utf-8";
+/* ============================================================
+   现代风格全局样式 — 覆盖 Bootstrap 3 以呈现更清爽外观
+   ============================================================ */
+
+/* ---------- 基础 ---------- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #f5f6fa;
+    color: #2d3436;
+    line-height: 1.7;
+}
+
+/* ---------- 导航条 ---------- */
+.navbar {
+    border-radius: 0;
+    border: none;
+    border-bottom: 3px solid #e74c3c;
+    background: linear-gradient(135deg, #fff 0%, #fefefe 100%);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 0;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #2d3436;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.navbar-default .navbar-nav > li > a:hover {
+    color: #e74c3c;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover {
+    background: transparent;
+    color: #e74c3c;
+    border-bottom: 2px solid #e74c3c;
+}
+
+/* ---------- 顶部欢迎条 ---------- */
+.top-bar {
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #636e72;
+}
+.top-bar a {
+    color: #636e72;
+    transition: color 0.2s;
+}
+.top-bar a:hover {
+    color: #e74c3c;
+    text-decoration: none;
+}
+
+/* ---------- LOGO 区域 ---------- */
+.brand-area {
+    padding: 15px 0;
+    background: #fff;
+}
+.brand-area .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ---------- 卡片替代 panel ---------- */
+.panel {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+    background: #fff;
+}
+.panel-heading {
+    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+    border-bottom: 1px solid #f0f0f0;
+    padding: 18px 25px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #2d3436;
+}
+.panel-body {
+    padding: 25px;
+}
+.panel-info {
+    border-top: 3px solid #e74c3c;
+}
+.panel-info .panel-heading {
+    background: linear-gradient(135deg, #fef5f5 0%, #fff5f5 100%);
+}
+
+/* ---------- 表格 ---------- */
+.table {
+    font-size: 15px;
+}
+.table > thead > tr > th {
+    background: #f8f9fa;
+    color: #636e72;
+    font-weight: 600;
+    border-bottom: 2px solid #e74c3c;
+    padding: 14px 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.table > tbody > tr > td,
+.table > tbody > tr > th {
+    padding: 12px;
+    vertical-align: middle;
+    border-top: 1px solid #f0f0f0;
+}
+.table-hover > tbody > tr:hover {
+    background-color: #fef9f9;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fafbfc;
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+}
+.btn-primary {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border: none;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    box-shadow: 0 4px 12px rgba(231,76,60,0.35);
+    transform: translateY(-1px);
+}
+.btn-default {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #636e72;
+}
+.btn-default:hover {
+    background: #f8f9fa;
+    border-color: #ccc;
+}
+.btn-xs {
+    border-radius: 4px;
+    padding: 3px 12px;
+    font-size: 12px;
+}
+.btn-danger {
+    background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+    border: none;
+}
+.btn-danger:hover {
+    box-shadow: 0 4px 12px rgba(214,48,49,0.35);
+    transform: translateY(-1px);
+}
+
+/* ---------- 登录/注册卡片 ---------- */
+.auth-card {
+    width: 420px;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: 120px auto;
+    padding: 35px 40px;
+}
+.auth-card h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #2d3436;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+.auth-card .form-control {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    height: 44px;
+    font-size: 15px;
+    padding: 10px 15px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+.auth-card .form-control:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.1);
+}
+.auth-card .btn-primary {
+    width: 100%;
+    height: 46px;
+    font-size: 16px;
+    letter-spacing: 6px;
+}
+
+/* ---------- 表单通用 ---------- */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    height: 44px;
+    font-size: 15px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+}
+
+/* ---------- 分页 ---------- */
+.pagination {
+    margin: 30px 0 10px;
+}
+.pagination > li > a,
+.pagination > li > span {
+    border-radius: 6px;
+    margin: 0 3px;
+    padding: 8px 16px;
+    color: #636e72;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+.pagination > li > a:hover {
+    background: #fef5f5;
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+.pagination > .active > a,
+.pagination > .active > span {
+    background: #e74c3c;
+    border-color: #e74c3c;
+    color: #fff;
+}
+
+/* ---------- 徽章 / 标签 ---------- */
+.tag-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    background: #fef5f5;
+    color: #e74c3c;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ---------- 收藏星星按钮 ---------- */
+.star-btn {
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    color: #f1c40f;
+    cursor: pointer;
+    padding: 0 10px;
+    transition: transform 0.2s;
+}
+.star-btn:hover {
+    transform: scale(1.2);
+}
+.star-btn.empty {
+    color: #bdc3c7;
+}
+
+/* ---------- 商品网格 ---------- */
+.comm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+    padding: 15px 0;
+}
+.comm-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.comm-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+.comm-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.comm-card .card-body {
+    padding: 15px;
+    text-align: center;
+}
+.comm-card .card-body a {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3436;
+}
+.comm-card .card-body a:hover {
+    color: #e74c3c;
+    text-decoration: none;
+}
+.comm-card .card-body .meta {
+    font-size: 13px;
+    color: #b2bec3;
+    margin-top: 5px;
+}
+
+/* ---------- 详情页 ---------- */
+.detail-header {
+    text-align: center;
+    padding: 30px 0 15px;
+}
+.detail-header .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3436;
+}
+.detail-header .meta {
+    color: #b2bec3;
+    font-size: 14px;
+    margin-top: 8px;
+}
+.detail-body {
+    font-size: 16px;
+    line-height: 1.9;
+    color: #2d3436;
+    padding: 20px 0;
+}
+.detail-body img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+/* ---------- 首页 hero ---------- */
+.hero-section {
+    position: relative;
+    margin-bottom: 30px;
+}
+.hero-section img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ---------- 分类标签云 ---------- */
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px 0;
+}
+.tag-cloud .tag-item {
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.tag-cloud .tag-item:nth-child(1)  { background: #ffeaa7; color: #6c5b3e; }
+.tag-cloud .tag-item:nth-child(2)  { background: #fab1a0; color: #6b3a2e; }
+.tag-cloud .tag-item:nth-child(3)  { background: #a29bfe; color: #3c2e6b; }
+.tag-cloud .tag-item:nth-child(4)  { background: #81ecec; color: #2e5e5e; }
+.tag-cloud .tag-item:nth-child(5)  { background: #fd79a8; color: #5e2e3e; }
+.tag-cloud .tag-item:nth-child(6)  { background: #ff7675; color: #5e2e2e; }
+.tag-cloud .tag-item:nth-child(7)  { background: #55efc4; color: #2e5e3e; }
+.tag-cloud .tag-item:nth-child(8)  { background: #74b9ff; color: #2e3e5e; }
+.tag-cloud .tag-item:hover {
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+/* ---------- 区块标题 ---------- */
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 30px 0 15px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #e74c3c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.section-title .more-link {
+    font-size: 14px;
+    font-weight: 400;
+    color: #b2bec3;
+}
+.section-title .more-link:hover {
+    color: #e74c3c;
+    text-decoration: none;
+}
+
+/* ---------- 统计卡片（管理员/商家用） ---------- */
+.stat-cards {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+.stat-card {
+    flex: 1;
+    min-width: 200px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-left: 4px solid #e74c3c;
+    transition: transform 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+.stat-card .number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #e74c3c;
+}
+.stat-card .label {
+    font-size: 13px;
+    color: #b2bec3;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.stat-card a {
+    color: #e74c3c;
+    font-size: 13px;
+}
+
+/* ---------- 消息 / 公告列表 ---------- */
+.mess-item {
+    padding: 16px 20px;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+.mess-item:hover {
+    background: #fef9f9;
+    border-left-color: #e74c3c;
+}
+.mess-item .mess-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d3436;
+}
+.mess-item .mess-meta {
+    font-size: 13px;
+    color: #b2bec3;
+    margin-top: 4px;
+}
+
+/* ---------- 页脚 ---------- */
+.site-footer {
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 60px;
+    padding: 30px 0;
+    text-align: center;
+    color: #b2bec3;
+    font-size: 13px;
+}
+.site-footer a {
+    color: #636e72;
+}
+.site-footer a:hover {
+    color: #e74c3c;
+    text-decoration: none;
+}
+
+/* ---------- 固定侧边快捷入口（仅首页） ---------- */
+.quick-entry {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.quick-entry a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 42px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+.quick-entry a:hover {
+    transform: translateX(-4px);
+}
+.quick-entry .entry-merchant { background: linear-gradient(135deg, #e17055, #d63031); }
+.quick-entry .entry-admin   { background: linear-gradient(135deg, #6c5ce7, #4834d4); }
+
+/* ---------- 模态框美化 ---------- */
+.modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.15);
+}
+.modal-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* ---------- 响应式微调 ---------- */
+@media (max-width: 768px) {
+    .auth-card {
+        width: 90%;
+        margin: 60px auto;
+        padding: 25px;
+    }
+    .comm-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+    }
+    .stat-cards {
+        flex-direction: column;
+    }
+}
+
+/* ---------- 特殊页面背景 ---------- */
+.auth-bg {
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

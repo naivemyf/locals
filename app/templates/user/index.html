@@ -1,238 +1,215 @@
 {% extends "user/layout.html" %}
 {% load static %}
 
- {% block title %}
-    <title>首页</title>
-    {% endblock %}
-
-{% block login %}
-{#      判断是否已经登录#}
-    <li class="dropdown" id="loginnav">
-    <a style="font-size: 20px;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-       aria-haspopup="true" aria-expanded="false" id="name"></a>
-    <ul class="dropdown-menu" id="navnav">
+{% block title %}
+    <title>红河州特产推荐平台</title>
 {% endblock %}
 
 {% block nav %}
-      <ul class="nav navbar-nav" style="margin-top: 25px;">
-        <li ><a style="font-size: 20px;" href="/index/">首页 <span class="sr-only">(current)</span></a></li>
-        <li><a style="font-size: 20px;" href="/article/list/">文章列表</a></li>
-          <li><a style="font-size: 20px;" href="/commdity/listall/">商品列表</a></li>
-          <li><a style="font-size: 20px;" href="/user/mess/list/">公告</a></li>
-          <li><a style="font-size: 20px;" href="/find/">查询 </a></li>
-      </ul>
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="/index/">🏠 首页</a></li>
+        <li><a href="/article/list/">📝 文章列表</a></li>
+        <li><a href="/commdity/listall/">🎁 商品列表</a></li>
+        <li><a href="/user/mess/list/">📢 公告</a></li>
+        <li><a href="/find/">🔍 查询</a></li>
+    </ul>
 {% endblock %}
 
+{% block login %}
+    <li class="dropdown" id="loginnav">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+           aria-haspopup="true" aria-expanded="false" id="name"
+           style="font-weight:600;color:#e74c3c;"></a>
+        <ul class="dropdown-menu" id="navnav"></ul>
+    </li>
+{% endblock %}
 
 {% block js %}
-    <script type="text/javascript" src="{% static "js/jquery-3.6.0.js" %}"></script>
     <script type="text/javascript" src="{% static 'js/zhonglin.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/zhongling2.js' %}"></script>
     <script>
     $(document).ready(function () {
-        {#判断角色#}
-
         function getRole(rid) {
             var a;
             if (rid == 1) {
-                a = "<li><a href='/article/listme/'>我发布的</a></li>";
-                a = a + "<li><a href='/user/fav/'>我收藏的</a></li>";
+                a = "<li><a href='/article/listme/'>📝 我发布的</a></li>";
+                a += "<li><a href='/user/fav/'>⭐ 我收藏的</a></li>";
             } else if (rid == 2) {
-                a = "<li><a href='/merchant/'>商家页面</a></li>";
-                a = a + "<li><a href='/merchant/fav/'>我收藏的</a></li>";
+                a = "<li><a href='/merchant/'>🏪 商家页面</a></li>";
+                a += "<li><a href='/merchant/fav/'>⭐ 我收藏的</a></li>";
             } else if (rid == 3) {
-                a = "<li><a href='/admin/'>管理页面</a></li>";
-                a = a + "<li><a href='/admin/fav/'>我收藏的</a></li>";
+                a = "<li><a href='/admin/'>⚙ 管理页面</a></li>";
+                a += "<li><a href='/admin/fav/'>⭐ 我收藏的</a></li>";
             }
             return a;
         }
 
-        {#角色存在#}
-        var name = "{{request.session.info.name}}";
+        var name = "{{ request.session.info.name }}";
         if (name) {
             var rid = "{{ request.session.info.role_id }}";
-            var li = "<li><a href='/user/{{ request.session.info.id }}/info/'>个人信息</a></li>";
-            getRole(rid);
-            b = "<li role='separator' class='divider'></li><li><a href='/logout/'>退出</a></li></ul></li>";
-            x = li + getRole(rid) + b;
+            var li = "<li><a href='/user/{{ request.session.info.id }}/info/'>👤 个人信息</a></li>";
+            var b = "<li role='separator' class='divider'></li><li><a href='/logout/'>🚪 退出</a></li></ul></li>";
+            var x = li + getRole(rid) + b;
             $("#navnav").html(x);
-            $("#name").html(name);
+            $("#name").html("👤 " + name);
         } else {
-            $(".dropdown").empty()
-            x = "<li><a href='/login/' style='color:grey'>登录</a></li>";
+            $(".dropdown").empty();
+            var x = "<li><a href='/login/' style='color:#e74c3c;font-weight:600;'>🔑 登录</a></li>";
             $("#loginnav").html(x);
         }
-    })
-</script>
-    {% block jsartlist %}
-    {% endblock %}
+    });
+    </script>
+    {% block jsartlist %}{% endblock %}
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" />
-    <link rel="stylesheet" type="text/css" href="{% static "css/zhonglingxm2.css" %}" />
-{% block csslist %}
-        <style>
-        .grid-container {
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/zhonglingxm2.css' %}">
+    {% block csslist %}
+    <style>
+        .comm-grid-home {
             display: grid;
-            grid-template-columns: auto auto auto auto auto;
-            padding: 10px;
-
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 10px 0;
         }
-        .grid-item {
-            border: none ;
-            font-size: 15px;
+        .comm-card-home {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.25s, box-shadow 0.25s;
             text-align: center;
-            width: 150px;
-            height: 150px;
-            margin-top: 60px;
         }
-         .grid-item img {
-            width: 150px; /* 设置图片宽度 */
-            height: 150px; /* 设置图片高度 */
+        .comm-card-home:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
         }
-            *{margin:0px; padding:0px; }
-            #NavTop{
-                    width:300px;
-                    height:200px;
-                    margin-top:430px;
-                    position:fixed;
-                right:0px;top:150px;        /*固定位置,右浮动，距上150px*/
-            }
-            #NavTop #NavCon{
-                            width:400px;
-                            height:200px;
-                            position:relative;
-            }
-            #NavTop #NavCon img.banner{
-                                        position:absolute;
-                                        left:40px;
-                                        top:-40px;
-            }
-
-            #NavTop #NavCon img.bottom{
-                                        margin-top:15px;
-            }
-
-
+        .comm-card-home img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .comm-card-home .card-info {
+            padding: 15px;
+        }
+        .comm-card-home .card-info a {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3436;
+        }
+        .comm-card-home .card-info a:hover {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+        .comm-card-home .card-info p {
+            font-size: 13px;
+            color: #b2bec3;
+            margin: 5px 0 0;
+        }
     </style>
-{% endblock %}
+    {% endblock %}
 {% endblock %}
 
-
+{% block body %}
+    {{ block.super }}
+{% endblock %}
 
 {% block content %}
-    <div id="NavTop" style="font-size: 20px;">
-                 <div id="NavCon">
-                     <a href="/merchant/login/"><img src="{% static 'img/index/sj.jpg' %}"
-                                 style="width: 300px;height: 150px;"></a>
-                    <div style="height: 10px;"></div>
-                     <a href="/admin/login/" ><img  src="{% static 'img/index/gly.jpg' %}"
-                                 style="width: 300px;height: 150px;"></a>
-                 </div>
-             </div>
+    {# 快捷入口 #}
+    <div class="quick-entry">
+        <a href="/merchant/login/" class="entry-merchant">🏪 商家入口</a>
+        <a href="/admin/login/" class="entry-admin">⚙ 管理员入口</a>
+    </div>
 
-    <!--banner-->
-    <div class="banner">
-    	<ul class="ban-ul1">
-        	<li><a href="JavaScript:;"><img src="{% static "img/index/1.jpg" %}" /></a></li>
-        	<li><a href="JavaScript:;"><img src="{% static "img/index/2.jpg" %}" /></a></li>
-        	<li><a href="JavaScript:;"><img src="{% static "img/index/3.jpg" %}" /></a></li>
-        	<li><a href="JavaScript:;"><img src="{% static "img/index/4.jpg" %}" /></a></li>
-            <li><a href="JavaScript:;"><img src="{% static "img/index/5.jpg" %}" /></a></li>
-            <li><a href="JavaScript:;"><img src="{% static "img/index/6.jpg" %}" /></a></li>
-        </ul>
-        <div class="ban-box w1200">
-        	<ol class="ban-ol1">
-            	<li class="current"></li>
-            	<li></li>
-            	<li></li>
-            	<li></li>
-               	<div style="clear:both;"></div>
-            </ol>
+    {# Banner 轮播 #}
+    <div class="container" style="margin-top:20px;">
+        <div class="banner" style="height:380px;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+            <ul class="ban-ul1">
+                <li><a href="#"><img src="{% static 'img/index/1.jpg' %}" style="width:100%;height:380px;object-fit:cover;"></a></li>
+                <li><a href="#"><img src="{% static 'img/index/2.jpg' %}" style="width:100%;height:380px;object-fit:cover;"></a></li>
+                <li><a href="#"><img src="{% static 'img/index/3.jpg' %}" style="width:100%;height:380px;object-fit:cover;"></a></li>
+                <li><a href="#"><img src="{% static 'img/index/4.jpg' %}" style="width:100%;height:380px;object-fit:cover;"></a></li>
+            </ul>
+            <div class="ban-box">
+                <ol class="ban-ol1">
+                    <li class="current"></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ol>
+            </div>
         </div>
     </div>
 
-    <!--热门推荐-->
-    <div class="zl-tuijian w1200">
-    	<div class="tuijian-left f-l">
-        	<img src="{% static "img/index/微信图片_20240430210829.jpg" %}"
-            style="height: 127px;"/>
-        </div>
-    	<ul class="tuijian-right f-l">
+    {# 特产分类标签云 #}
+    <div class="container" style="margin-top:25px;">
+        <div class="tag-cloud">
             {% for i in tag %}
-        	<li><div class="li-box li-box{{ forloop.counter }}"><a href="/tag/{{ i.id }}/"  class="li-a1">{{ i.name }}</a></div></li>
-        	{% endfor %}
-            <div style="clear:both;"></div>
-        </ul>
-        <div style="clear:both;"></div>
-    </div>
-
-    <!--文章-->
-    <div class="zl-info w1200">
-    	<div class="zl-title1">
-        	<h3 class="title1-h3 f-l">文章推荐</h3>
-            <ul class="title1-ul1 f-r">
-            	<li class="current"><a href="/article/list/">更多文章</a></li>
-            	<li><a href="#"></a></li>
-                <div style="clear:both;"></div>
-            </ul>
-        </div>
-{#        红线结束#}
-            <div class="bs-example" data-example-id="simple-responsive-table">
-    <div class="table-responsive">
-
-      <table class="table" style="font-size: 18px;">
-        <tbody>
-        {% if rec_list.art %}
-              {% for i in rec_list.art %}
-          <tr>
-            <th scope="row"><a style="font-size: 18px;" href="/article/{{ i.id }}/detail/">{{ i.title }}</a></th>
-            <td>{{ i.timestamp|date:'Y-m-d H:i:s'}}</td>
-            <td>{{ i.username }}</td>
-            <td>{{ i.tag }}</td>
-          </tr>
-              {% endfor %}
-              {% endif %}
-        </tbody>
-      </table>
-
-    </div><!-- /.table-responsive -->
-        </div>
-    </div>
-    <!--商品-->
-    <div class="zl-info w1200">
-    	<div class="zl-title1">
-        	<h3 class="title1-h3 f-l">商品推荐</h3>
-            <ul class="title1-ul1 f-r">
-            	<li class="current"><a href="/commdity/listall/">更多商品</a></li>
-            	<li><a href="#"></a></li>
-                <div style="clear:both;"></div>
-            </ul>
-        </div>
-        <div class="grid-container" style="font-size: 20px;" >
-            {% if rec_list.comm == "暂无商品" %}
-                <p>暂无特色商品</p>
-                {% else %}
-            {% for i in rec_list.comm %}
-            <div class="grid-item" >
-                {% if i.pic %}
-                <a href="/commdity/{{ i.id }}/detail/"><img src="{{ i.pic.url }}"></a>
-                {% else %}
-                <img src="{% static 'img/web/defalut.jpg' %}">
-                {% endif %}
-                <a href="/commdity/{{ i.id }}/detail/" style="font-size: 20px;">{{ i.commdityname }}</a>
-                <p>{{ i.createtime|date:'Y-m-d H:i:s' }}</p></div>
+            <a href="/tag/{{ i.id }}/" class="tag-item">{{ i.name }}</a>
             {% endfor %}
-            {% endif %}
-
         </div>
-<hr style=" margin-top:80px;border: 1px solid grey;width: 100%;">
     </div>
-    <div class="footer" style="margin-top: 25px;">
-    <p style="color: grey">内容由myf提供，仅供您参考</p>
-    <p style="color: grey">用户协议  |  隐私政策 </p>
-    <P style="color: grey">联系方式  |QQ：1749575316</P>
+
+    {# 文章推荐 #}
+    <div class="container">
+        <div class="section-title">
+            📝 文章推荐
+            <a href="/article/list/" class="more-link">更多文章 →</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>发布时间</th>
+                        <th>作者</th>
+                        <th>标签</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if rec_list.art %}
+                    {% for i in rec_list.art %}
+                    <tr>
+                        <td><a href="/article/{{ i.id }}/detail/" style="font-weight:600;color:#2d3436;">{{ i.title }}</a></td>
+                        <td>{{ i.timestamp|date:'Y-m-d H:i' }}</td>
+                        <td>{{ i.username }}</td>
+                        <td><span class="tag-badge">{{ i.tag }}</span></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="4" style="text-align:center;color:#b2bec3;">暂无推荐文章</td></tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# 商品推荐 #}
+    <div class="container">
+        <div class="section-title">
+            🎁 商品推荐
+            <a href="/commdity/listall/" class="more-link">更多商品 →</a>
+        </div>
+        <div class="comm-grid-home">
+            {% if rec_list.comm %}
+                {% for i in rec_list.comm %}
+                <div class="comm-card-home">
+                    {% if i.pic %}
+                    <a href="/commdity/{{ i.id }}/detail/"><img src="{{ i.pic.url }}" alt="{{ i.commdityname }}"></a>
+                    {% else %}
+                    <a href="/commdity/{{ i.id }}/detail/"><img src="{% static 'img/web/defalut.jpg' %}" alt="默认图片"></a>
+                    {% endif %}
+                    <div class="card-info">
+                        <a href="/commdity/{{ i.id }}/detail/">{{ i.commdityname }}</a>
+                        <p>{{ i.createtime|date:'Y-m-d' }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#b2bec3;grid-column:1/-1;text-align:center;">暂无推荐商品</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
-
